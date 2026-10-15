@@ -19,6 +19,16 @@ Marca cada casilla al completarla. Las fases van en orden: cada una deja la web 
 
 ---
 
+## Demo pública en GitHub Pages (ya en marcha)
+
+- **URL:** https://cye-studio.github.io/seguros-gestoria-arroyo/
+- **Repositorio:** https://github.com/CyE-Studio/seguros-gestoria-arroyo (público; Pages gratuito solo funciona en repos públicos)
+- Cada `git push` a `main` vuelve a publicar la web en 1–2 minutos (flujo en `.github/workflows/pages.yml`).
+- Es una exportación estática: funciona todo **menos** el Studio de Sanity y el webhook de ISR. Para eso está la Fase 3 (Vercel).
+- Para probar la exportación en local: `npm run export:prepare`, luego `STATIC_EXPORT=1 NEXT_PUBLIC_BASE_PATH=/seguros-gestoria-arroyo npm run build`, y al terminar `npm run export:restore` (en Git Bash, antepón `MSYS_NO_PATHCONV=1`).
+
+---
+
 ## Fase 1 · Antes de la demo (1 tarde)
 
 ### 1.1 Comprobar en tu navegador real
