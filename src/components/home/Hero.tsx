@@ -52,9 +52,10 @@ export function Hero() {
             </Button>
           </div>
 
-          <ul className="mt-12 hidden divide-x divide-slate-200 border-t border-slate-200 pt-6 text-sm text-slate-600 sm:flex">
+          <ul className="mt-12 hidden flex-wrap items-center gap-x-7 gap-y-2 border-t border-slate-200 pt-6 text-sm text-slate-600 sm:flex">
             {DATOS_CONFIANZA.map((d) => (
-              <li key={d} className="pr-6 pl-6 first:pl-0 last:pr-0">
+              <li key={d} className="flex items-center gap-2 whitespace-nowrap">
+                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-mapfre-600" />
                 {d}
               </li>
             ))}
