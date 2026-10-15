@@ -46,7 +46,7 @@ export function Resenas() {
           />
           <Button href={GOOGLE_RESENAS_URL} variante="outline" className="shrink-0">
             Ver reseñas en Google
-            <Icon name="external-link" className="h-4 w-4" />
+            <Icon name="external-link" className="h-4 w-4 transition-transform duration-300 group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5" />
           </Button>
         </Reveal>
 
@@ -56,6 +56,7 @@ export function Resenas() {
               key={r.nombre + i}
               as="li"
               retardo={i * 100}
+              luz
               className="relative flex flex-col rounded-2xl border border-slate-200 bg-white p-7 shadow-soft"
             >
               <span

@@ -78,6 +78,121 @@
   }
 }
 
+/* ──────────────────────────────────────────────────────────────────────────
+ * Microinteracciones (hover / foco)
+ * ────────────────────────────────────────────────────────────────────────── */
+
+/* Brillo que recorre los botones de relleno al pasar el cursor. */
+.btn-brillo {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-brillo::after {
+  content: "";
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: -70%;
+  width: 45%;
+  background: linear-gradient(100deg, transparent, rgb(255 255 255 / 0.38), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.btn-brillo:hover::after {
+  left: 125%;
+}
+
+/* Foco de luz que sigue al cursor dentro de una tarjeta (ver hooks/useSpotlight). */
+.tarjeta-luz {
+  position: relative;
+  overflow: hidden;
+  /* Contexto de apilamiento propio: el ::before con z-index negativo queda
+     por encima del fondo de la tarjeta y por debajo de todo su contenido. */
+  isolation: isolate;
+  --luz-color: rgb(55 102 155 / 0.16);
+}
+.tarjeta-luz::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  background: radial-gradient(
+    380px circle at var(--luz-x, 50%) var(--luz-y, 50%),
+    var(--luz-color),
+    transparent 48%
+  );
+}
+.tarjeta-luz:hover::before {
+  opacity: 1;
+}
+
+/* Subrayado que crece desde la izquierda (enlaces de texto, pie). */
+.enlace-sub {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition:
+    background-size 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.2s,
+    transform 0.2s;
+}
+.enlace-sub:hover {
+  background-size: 100% 1px;
+}
+
+/* Subrayado que nace del centro (menú principal). */
+.enlace-nav {
+  position: relative;
+}
+.enlace-nav::after {
+  content: "";
+  position: absolute;
+  left: 0.875rem;
+  right: 0.875rem;
+  bottom: 0.3rem;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.7;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.enlace-nav:hover::after,
+.enlace-nav:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Baldosa de icono dentro de una tarjeta `group`: ligera escala y giro. */
+.icono-baldosa {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.3s,
+    color 0.3s,
+    box-shadow 0.3s;
+}
+.group:hover .icono-baldosa {
+  transform: scale(1.08) rotate(-4deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-brillo::after,
+  .tarjeta-luz::before,
+  .enlace-nav::after,
+  .icono-baldosa {
+    transition: none;
+  }
+  .group:hover .icono-baldosa {
+    transform: none;
+  }
+}
+
 /* Aparición al hacer scroll (ver components/ui/Reveal.tsx). */
 .reveal {
   opacity: 0;

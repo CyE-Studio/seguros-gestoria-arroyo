@@ -66,10 +66,10 @@ export function MapaConsentido({ className = "" }: MapaConsentidoProps) {
           href={NEGOCIO.mapsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-11 items-center gap-2 rounded-xl px-5 text-sm font-semibold text-white ring-1 ring-inset ring-white/40 transition hover:bg-white/10"
+          className="group/btn inline-flex h-11 items-center gap-2 rounded-xl px-5 text-sm font-semibold text-white ring-1 ring-inset ring-white/40 transition hover:bg-white/10"
         >
           Abrir en Google Maps
-          <Icon name="external-link" className="h-4 w-4" />
+          <Icon name="external-link" className="h-4 w-4 transition-transform duration-300 group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5" />
         </a>
       </div>
       <p className="relative mt-4 max-w-xs text-xs text-brand-200">

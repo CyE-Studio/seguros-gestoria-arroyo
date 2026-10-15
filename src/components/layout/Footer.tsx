@@ -54,7 +54,7 @@ export function Footer() {
               <li key={s.titulo}>
                 <Link
                   href={`/gestoria#${slugify(s.titulo)}`}
-                  className="text-sm text-brand-200 transition hover:text-white"
+                  className="enlace-sub inline-block text-sm text-brand-200 hover:translate-x-0.5 hover:text-white"
                 >
                   {s.titulo}
                 </Link>
@@ -70,14 +70,14 @@ export function Footer() {
               <li key={s.titulo}>
                 <Link
                   href={`/seguros#${slugify(s.titulo)}`}
-                  className="text-sm text-brand-200 transition hover:text-white"
+                  className="enlace-sub inline-block text-sm text-brand-200 hover:translate-x-0.5 hover:text-white"
                 >
                   {s.titulo}
                 </Link>
               </li>
             ))}
             <li>
-              <Link href="/campanas" className="text-sm text-brand-200 transition hover:text-white">
+              <Link href="/campanas" className="enlace-sub inline-block text-sm text-brand-200 hover:translate-x-0.5 hover:text-white">
                 Campañas y promociones
               </Link>
             </li>
@@ -140,7 +140,7 @@ export function Footer() {
           <ul className="flex flex-wrap gap-x-5 gap-y-1">
             {ENLACES_LEGALES.map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="transition hover:text-white">
+                <Link href={l.href} className="enlace-sub hover:text-white">
                   {l.label}
                 </Link>
               </li>

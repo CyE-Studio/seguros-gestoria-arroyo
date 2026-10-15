@@ -10,6 +10,7 @@ import { Faq } from "@/components/ui/Faq";
 import { Icon, WhatsAppIcon } from "@/components/ui/Icon";
 import { PageHero } from "@/components/ui/PageHero";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Spotlight } from "@/components/ui/Spotlight";
 import { NEGOCIO, SERVICIOS_SEGUROS } from "@/lib/constants";
 import { FAQ_SEGUROS } from "@/lib/faqs";
 import { slugify } from "@/lib/format";
@@ -62,17 +63,18 @@ export default function SegurosPage() {
           />
           <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {SERVICIOS_SEGUROS.map((s) => (
-              <li
+              <Spotlight
+                as="li"
                 key={s.titulo}
                 id={slugify(s.titulo)}
-                className="scroll-mt-28 rounded-2xl border border-slate-200 bg-white p-6 shadow-soft transition hover:-translate-y-0.5 hover:shadow-lift"
+                className="group scroll-mt-28 rounded-2xl border border-slate-200 bg-white p-6 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-mapfre-200 hover:shadow-lift [--luz-color:rgb(255_0_45/0.12)]"
               >
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-mapfre-50 text-mapfre-600">
+                <span className="icono-baldosa inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-mapfre-50 to-mapfre-100 text-mapfre-600 group-hover:from-mapfre-500 group-hover:to-mapfre-700 group-hover:text-white group-hover:shadow-soft">
                   <Icon name={s.icono} className="h-6 w-6" />
                 </span>
                 <h3 className="mt-5 text-lg font-bold">{s.titulo}</h3>
                 <p className="mt-2 text-base leading-relaxed text-slate-600">{s.descripcion}</p>
-              </li>
+              </Spotlight>
             ))}
           </ul>
         </Container>
@@ -100,11 +102,11 @@ export default function SegurosPage() {
             <div className="flex flex-col gap-3 lg:col-span-2">
               <Button href="/campanas?categoria=seguros" variante="mapfre" tamano="lg">
                 Ver promociones activas
-                <Icon name="arrow-right" className="h-4 w-4" />
+                <Icon name="arrow-right" className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
               </Button>
               <Button href={mapfre.url} variante="outline" tamano="lg">
                 Ficha de la oficina en mapfre.es
-                <Icon name="external-link" className="h-4 w-4" />
+                <Icon name="external-link" className="h-4 w-4 transition-transform duration-300 group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5" />
               </Button>
             </div>
           </div>

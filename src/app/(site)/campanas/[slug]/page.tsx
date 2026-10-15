@@ -125,7 +125,7 @@ export default async function CampanaPage({ params }: PageProps) {
           </Button>
           <Button href={esSeguros ? "/seguros" : "/gestoria"} variante={esSeguros ? "mapfre" : "primary"}>
             {esSeguros ? "Ver seguros MAPFRE" : "Ver servicios de gestoría"}
-            <Icon name="arrow-right" className="h-4 w-4" />
+            <Icon name="arrow-right" className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
           </Button>
         </div>
       </Container>

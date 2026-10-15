@@ -77,7 +77,8 @@ export function BandaParallax() {
               key={d.etiqueta}
               as="li"
               retardo={i * 90}
-              className="rounded-2xl bg-white/[0.07] p-6 ring-1 ring-inset ring-white/10 backdrop-blur-sm transition hover:bg-white/[0.11]"
+              luz
+              className="[--luz-color:rgb(255_255_255/0.16)] rounded-2xl bg-white/[0.07] p-6 ring-1 ring-inset ring-white/10 backdrop-blur-sm transition hover:bg-white/[0.11]"
             >
               <Icon name={d.icono} className="h-6 w-6 text-brand-300" />
               <p className="mt-4 font-display text-3xl font-extrabold text-white">{d.valor}</p>
@@ -89,7 +90,7 @@ export function BandaParallax() {
         <Reveal retardo={300} className="mt-12 flex justify-center">
           <Button href="/contacto" variante="white" tamano="lg">
             Ver horario y cómo llegar
-            <Icon name="arrow-right" className="h-4 w-4" />
+            <Icon name="arrow-right" className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
           </Button>
         </Reveal>
       </Container>

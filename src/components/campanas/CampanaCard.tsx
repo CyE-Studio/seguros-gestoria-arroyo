@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Icon } from "@/components/ui/Icon";
+import { Spotlight } from "@/components/ui/Spotlight";
 import { formatearFecha } from "@/lib/format";
 import { urlFor } from "@/services/sanity/image";
 import type { CampanaResumen } from "@/types/campana";
@@ -21,7 +22,9 @@ export function CampanaCard({ campana, prioridad = false }: CampanaCardProps) {
   const imagenUrl = imagenPrincipal ? urlFor(imagenPrincipal).width(800).height(500).url() : null;
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-lift focus-within:ring-2 focus-within:ring-brand-500">
+    <Spotlight
+      as="article"
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-lift focus-within:ring-2 focus-within:ring-brand-500">
       <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
         {imagenUrl ? (
           <Image
@@ -49,7 +52,7 @@ export function CampanaCard({ campana, prioridad = false }: CampanaCardProps) {
           </time>
         </div>
 
-        <h3 className="text-lg font-bold leading-snug">
+        <h3 className="text-lg font-bold leading-snug transition-colors duration-300 group-hover:text-brand-700">
           {/* Enlace "estirado": toda la tarjeta es clicable sin anidar interactivos. */}
           <Link href={href} className="after:absolute after:inset-0 focus:outline-none">
             {titulo}
@@ -63,6 +66,6 @@ export function CampanaCard({ campana, prioridad = false }: CampanaCardProps) {
           <Icon name="arrow-right" className="h-4 w-4 transition group-hover:translate-x-0.5" />
         </span>
       </div>
-    </article>
+    </Spotlight>
   );
 }

@@ -56,7 +56,7 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 aria-current={activo ? "page" : undefined}
-                className={`rounded-lg px-3.5 py-2 text-[15px] font-medium transition ${enlace(activo)}`}
+                className={`enlace-nav rounded-lg px-3.5 py-2 text-[15px] font-medium transition ${enlace(activo)}`}
               >
                 {link.label}
               </Link>

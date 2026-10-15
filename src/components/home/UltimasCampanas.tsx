@@ -24,7 +24,7 @@ export async function UltimasCampanas() {
           />
           <Button href="/campanas" variante="outline" className="shrink-0">
             Ver todas
-            <Icon name="arrow-right" className="h-4 w-4" />
+            <Icon name="arrow-right" className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
           </Button>
         </div>
         <div className="mt-12">

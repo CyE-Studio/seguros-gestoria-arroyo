@@ -10,6 +10,7 @@ import { Faq } from "@/components/ui/Faq";
 import { Icon, WhatsAppIcon } from "@/components/ui/Icon";
 import { PageHero } from "@/components/ui/PageHero";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Spotlight } from "@/components/ui/Spotlight";
 import { NEGOCIO, SERVICIOS_GESTORIA } from "@/lib/constants";
 import { FAQ_GESTORIA } from "@/lib/faqs";
 import { slugify } from "@/lib/format";
@@ -58,17 +59,18 @@ export default function GestoriaPage() {
           />
           <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {SERVICIOS_GESTORIA.map((s) => (
-              <li
+              <Spotlight
+                as="li"
                 key={s.titulo}
                 id={slugify(s.titulo)}
-                className="scroll-mt-28 rounded-2xl border border-slate-200 bg-white p-6 shadow-soft transition hover:-translate-y-0.5 hover:shadow-lift"
+                className="group scroll-mt-28 rounded-2xl border border-slate-200 bg-white p-6 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift"
               >
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+                <span className="icono-baldosa inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-700 group-hover:from-brand-700 group-hover:to-brand-900 group-hover:text-white group-hover:shadow-soft">
                   <Icon name={s.icono} className="h-6 w-6" />
                 </span>
                 <h3 className="mt-5 text-lg font-bold">{s.titulo}</h3>
                 <p className="mt-2 text-base leading-relaxed text-slate-600">{s.descripcion}</p>
-              </li>
+              </Spotlight>
             ))}
           </ul>
         </Container>
@@ -110,8 +112,8 @@ export default function GestoriaPage() {
                 icono: "shield-check",
               },
             ].map((v) => (
-              <li key={v.titulo} className="rounded-2xl bg-slate-50 p-5">
-                <Icon name={v.icono as "map-pin"} className="h-6 w-6 text-brand-700" />
+              <li key={v.titulo} className="group rounded-2xl bg-slate-50 p-5 transition duration-300 hover:-translate-y-0.5 hover:bg-brand-50">
+                <Icon name={v.icono as "map-pin"} className="icono-baldosa h-6 w-6 text-brand-700" />
                 <p className="mt-3 font-display font-bold text-slate-900">{v.titulo}</p>
                 <p className="mt-1.5 text-[15px] leading-relaxed text-slate-600">{v.descripcion}</p>
               </li>

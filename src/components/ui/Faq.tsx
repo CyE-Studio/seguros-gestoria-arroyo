@@ -43,7 +43,7 @@ export function Faq({
         >
           {preguntas.map((p) => (
             <details key={p.pregunta} className="group px-6">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-left font-display text-base font-semibold text-slate-900 sm:text-lg">
+              <summary className="-mx-6 flex cursor-pointer list-none items-center justify-between gap-6 px-6 py-5 text-left transition-colors duration-300 hover:bg-slate-50 group-open:bg-slate-50/60 font-display text-base font-semibold text-slate-900 sm:text-lg">
                 {p.pregunta}
                 <Icon
                   name="chevron-down"

@@ -19,7 +19,7 @@ export function Logo({ claro = false }: LogoProps) {
   const colorLogo = claro ? "text-white" : "text-mapfre-600";
 
   return (
-    <Link href="/" className="flex items-center gap-3" aria-label={`${NEGOCIO.nombre}, inicio`}>
+    <Link href="/" className="group flex items-center gap-3 transition-transform duration-300 hover:scale-[1.02]" aria-label={`${NEGOCIO.nombre}, inicio`}>
       <MapfreLogo className={`h-6 w-auto sm:h-7 ${colorLogo}`} titulo="MAPFRE" />
       <span aria-hidden="true" className={`hidden h-8 w-px sm:block ${separador}`} />
       <span className="hidden flex-col leading-tight sm:flex">

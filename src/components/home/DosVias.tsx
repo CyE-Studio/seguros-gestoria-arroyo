@@ -31,7 +31,8 @@ export function DosVias() {
           {/* Gestoría */}
           <Reveal
             as="article"
-            className="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 shadow-soft transition hover:-translate-y-1 hover:shadow-lift sm:p-10"
+            luz
+            className="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 shadow-soft transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift sm:p-10"
           >
             <div
               aria-hidden="true"
@@ -42,7 +43,7 @@ export function DosVias() {
               className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-brand-100/60 blur-2xl transition group-hover:bg-brand-200/70"
             />
             <div className="relative flex items-center gap-4">
-              <span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-700 to-brand-950 text-white shadow-soft">
+              <span className="icono-baldosa inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-700 to-brand-950 text-white shadow-soft">
                 <Icon name="file-text" className="h-7 w-7" />
               </span>
               <div>
@@ -80,8 +81,9 @@ export function DosVias() {
           {/* Seguros MAPFRE */}
           <Reveal
             as="article"
+            luz
             retardo={120}
-            className="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 shadow-soft transition hover:-translate-y-1 hover:shadow-lift sm:p-10"
+            className="group relative flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 shadow-soft transition hover:-translate-y-1 hover:border-mapfre-200 hover:shadow-lift sm:p-10 [--luz-color:rgb(255_0_45/0.12)]"
           >
             <div
               aria-hidden="true"
@@ -92,7 +94,7 @@ export function DosVias() {
               className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-mapfre-100/60 blur-2xl transition group-hover:bg-mapfre-200/70"
             />
             <div className="relative flex items-center gap-4">
-              <span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-mapfre-500 to-mapfre-700 text-white shadow-soft">
+              <span className="icono-baldosa inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-mapfre-500 to-mapfre-700 text-white shadow-soft">
                 <Icon name="shield-check" className="h-7 w-7" />
               </span>
               <div>

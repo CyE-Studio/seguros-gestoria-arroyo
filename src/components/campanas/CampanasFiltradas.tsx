@@ -53,7 +53,7 @@ export function CampanasFiltradas({ campanas }: CampanasFiltradasProps) {
               type="button"
               aria-selected={seleccionado}
               onClick={() => cambiarFiltro(f.value)}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition duration-300 hover:-translate-y-0.5 hover:shadow-soft ${
                 seleccionado
                   ? "bg-brand-800 text-white"
                   : "bg-white text-slate-600 ring-1 ring-inset ring-slate-300 hover:bg-slate-50"
