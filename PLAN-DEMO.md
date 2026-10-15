@@ -124,6 +124,13 @@ Marca cada casilla al completarla. Las fases van en orden: cada una deja la web 
 
 ---
 
+## Asistente de chat (demostración)
+
+- Botón flotante abajo a la derecha en todas las páginas. Abre un chat que responde dudas frecuentes (horario, cómo llegar, renta, transferencias, partes, promociones, seguros…) y deriva a WhatsApp o teléfono cuando no sabe.
+- **No es IA real**: responde con la base de conocimiento de `src/lib/asistente.ts` (palabras clave → respuesta). Se puede ampliar añadiendo intenciones ahí.
+- Se abre solo con la URL `…/#asistente` (útil para enseñarlo en la demo).
+- **Para hacerlo real** (segunda fase): conectar el envío a la API de Claude con las FAQ y los datos de la oficina como contexto. Hace falta un pequeño backend (en Vercel, una ruta `/api/chat`), así que no funcionaría en GitHub Pages.
+
 ## Mejoras opcionales (para una segunda fase con el cliente)
 
 - [ ] Analítica sin cookies (Plausible o Umami) para medir visitas sin banner de consentimiento.

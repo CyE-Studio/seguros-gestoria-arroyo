@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { AsistenteChat } from "@/components/chat/AsistenteChat";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { MobileCtaBar } from "@/components/layout/MobileCtaBar";
@@ -23,6 +24,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       </main>
       <Footer />
       <MobileCtaBar />
+      <AsistenteChat />
     </div>
   );
 }
