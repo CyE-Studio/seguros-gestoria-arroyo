@@ -26,13 +26,7 @@ export function ComoTrabajamos() {
           />
           {PASOS.map((paso, i) => (
             <Reveal key={paso.titulo} as="li" retardo={i * 140} className="relative">
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute -top-6 right-0 select-none font-display text-[7rem] font-extrabold leading-none text-brand-900/[0.06]"
-              >
-                0{i + 1}
-              </span>
-              <span className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-700 to-brand-950 font-display text-xl font-bold text-white shadow-soft ring-8 ring-slate-50">
+              <span className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-950 font-display text-xl font-bold text-white ring-8 ring-slate-50">
                 {i + 1}
               </span>
               <h3 className="relative mt-5 text-xl font-bold">{paso.titulo}</h3>

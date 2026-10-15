@@ -3,29 +3,30 @@ import { Icon } from "@/components/ui/Icon";
 import { Reveal } from "@/components/ui/Reveal";
 import { VENTAJAS } from "@/lib/constants";
 
-/** Franja de confianza justo debajo de la portada. */
+/** Franja de confianza bajo la portada: cuatro puntos separados por líneas finas. */
 export function Ventajas() {
   return (
-    <section aria-label="Por qué elegirnos" className="relative bg-white">
-      <Container className="-mt-10 lg:-mt-14">
-        <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+    <section aria-label="Por qué elegirnos" className="border-y border-slate-200 bg-white">
+      <Container>
+        <ul className="grid grid-cols-2 divide-slate-200 lg:grid-cols-4 lg:divide-x">
           {VENTAJAS.map((v, i) => (
             <Reveal
               key={v.titulo}
               as="li"
-              retardo={i * 90}
-              luz
-              className="group rounded-2xl border border-slate-200 bg-white p-4 shadow-soft transition hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift sm:p-6"
+              retardo={i * 80}
+              className="group flex gap-4 py-7 lg:px-8 lg:first:pl-0 lg:last:pr-0"
             >
-              <span className="icono-baldosa inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-700 group-hover:from-brand-700 group-hover:to-brand-900 group-hover:text-white sm:h-12 sm:w-12">
-                <Icon name={v.icono} className="h-5 w-5 sm:h-6 sm:w-6" />
+              <span className="icono-baldosa inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700 group-hover:bg-brand-800 group-hover:text-white">
+                <Icon name={v.icono} className="h-5 w-5" />
               </span>
-              <p className="mt-3 font-display text-[15px] font-bold leading-snug text-slate-900 sm:mt-4 sm:text-[17px]">
-                {v.titulo}
-              </p>
-              <p className="mt-1.5 hidden text-[15px] leading-relaxed text-slate-600 sm:block">
-                {v.descripcion}
-              </p>
+              <div>
+                <p className="font-display text-[15px] font-bold leading-snug text-slate-900 sm:text-base">
+                  {v.titulo}
+                </p>
+                <p className="mt-1 hidden text-sm leading-relaxed text-slate-500 sm:block">
+                  {v.descripcion}
+                </p>
+              </div>
             </Reveal>
           ))}
         </ul>

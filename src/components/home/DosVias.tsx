@@ -11,13 +11,9 @@ export function DosVias() {
     <section
       id="servicios"
       aria-labelledby="servicios-titulo"
-      className="relative scroll-mt-20 overflow-hidden bg-slate-50 py-20 sm:py-28"
+      className="scroll-mt-20 bg-slate-50 py-20 sm:py-28"
     >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgb(15_23_42/0.05)_1px,transparent_0)] [background-size:28px_28px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]"
-      />
-      <Container className="relative">
+      <Container>
         <Reveal>
           <SectionHeading
             id="servicios-titulo"
