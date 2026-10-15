@@ -7,7 +7,7 @@ import { VENTAJAS } from "@/lib/constants";
 export function Ventajas() {
   return (
     <section aria-label="Por qué elegirnos" className="relative bg-white">
-      <Container className="-mt-6 lg:-mt-10">
+      <Container className="-mt-10 lg:-mt-14">
         <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           {VENTAJAS.map((v, i) => (
             <Reveal

@@ -12,8 +12,7 @@ import { useScrolled } from "@/hooks/useScrolled";
 import { NAV_LINKS, NEGOCIO } from "@/lib/constants";
 
 /**
- * Cabecera fija. En la portada empieza transparente sobre el hero oscuro y
- * pasa a blanca al hacer scroll o al abrir el menú móvil.
+ * Cabecera fija blanca; gana sombra al hacer scroll.
  */
 export function Header() {
   const scrolled = useScrolled(24);
@@ -26,27 +25,18 @@ export function Header() {
   }, [pathname]);
 
   const esActivo = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
-  const transparente = pathname === "/" && !scrolled && !abierto;
 
-  const enlace = (activo: boolean) => {
-    if (transparente) {
-      return activo ? "bg-white/15 text-white" : "text-white/85 hover:bg-white/10 hover:text-white";
-    }
-    return activo ? "bg-brand-50 text-brand-800" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900";
-  };
+  const enlace = (activo: boolean) =>
+    activo ? "bg-brand-50 text-brand-800" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900";
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,box-shadow] duration-300 ${
-        transparente
-          ? "border-transparent bg-transparent"
-          : scrolled
-            ? "border-slate-200 bg-white/90 shadow-sm backdrop-blur-md"
-            : "border-transparent bg-white/90 backdrop-blur-md"
+      className={`fixed inset-x-0 top-0 z-50 border-b bg-white/90 backdrop-blur-md transition-[border-color,box-shadow] duration-300 ${
+        scrolled ? "border-slate-200 shadow-sm" : "border-slate-200/60"
       }`}
     >
       <Container className="flex h-18 items-center justify-between gap-6">
-        <Logo claro={transparente} />
+        <Logo />
 
         <nav aria-label="Principal" className="hidden items-center gap-1 lg:flex">
           {NAV_LINKS.map((link) => {
@@ -65,15 +55,11 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
-          <Button
-            href={NEGOCIO.whatsapp.href}
-            variante={transparente ? "outline-light" : "outline"}
-            tamano="sm"
-          >
-            <WhatsAppIcon className={`h-4 w-4 ${transparente ? "text-wa" : "text-wa"}`} />
+          <Button href={NEGOCIO.whatsapp.href} variante="outline" tamano="sm">
+            <WhatsAppIcon className="h-4 w-4 text-wa" />
             WhatsApp
           </Button>
-          <Button href={NEGOCIO.telefono.href} variante={transparente ? "white" : "primary"} tamano="sm">
+          <Button href={NEGOCIO.telefono.href} variante="primary" tamano="sm">
             <Icon name="phone" className="h-4 w-4" />
             {NEGOCIO.telefono.visible}
           </Button>
@@ -84,9 +70,7 @@ export function Header() {
           onClick={() => setAbierto((v) => !v)}
           aria-expanded={abierto}
           aria-controls="menu-movil"
-          className={`inline-flex h-10 w-10 items-center justify-center rounded-lg lg:hidden ${
-            transparente ? "text-white hover:bg-white/10" : "text-slate-700 hover:bg-slate-100"
-          }`}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-700 hover:bg-slate-100 lg:hidden"
         >
           <span className="sr-only">{abierto ? "Cerrar menú" : "Abrir menú"}</span>
           <Icon name={abierto ? "x" : "menu"} className="h-6 w-6" />
