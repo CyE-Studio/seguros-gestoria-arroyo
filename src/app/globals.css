@@ -1,0 +1,147 @@
+@import "tailwindcss";
+
+/*
+ * Tokens de diseño (Tailwind v4).
+ * - `brand-*`: azul marino propio del negocio (confianza, gestoría).
+ * - `mapfre-*`: rojo corporativo de MAPFRE (#FF002D), reservado a lo relacionado con seguros.
+ * - `wa`: verde de WhatsApp.
+ */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-manrope), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-50: #f0f5fa;
+  --color-brand-100: #dbe6f2;
+  --color-brand-200: #b9cde3;
+  --color-brand-300: #8aabcf;
+  --color-brand-400: #5a85b6;
+  --color-brand-500: #37669b;
+  --color-brand-600: #27507f;
+  --color-brand-700: #1f4068;
+  --color-brand-800: #1a3454;
+  --color-brand-900: #152a45;
+  --color-brand-950: #0d1b2e;
+
+  /* Escala construida sobre el rojo del logotipo actual de MAPFRE (#ff002d). */
+  --color-mapfre-50: #fff0f3;
+  --color-mapfre-100: #ffe0e6;
+  --color-mapfre-200: #ffc2cc;
+  --color-mapfre-300: #ff94a8;
+  --color-mapfre-400: #ff5c7a;
+  --color-mapfre-500: #ff2b52;
+  --color-mapfre-600: #ff002d;
+  --color-mapfre-700: #d60026;
+  --color-mapfre-800: #ad001f;
+  --color-mapfre-900: #860018;
+
+  --color-wa: #25d366;
+  --color-wa-dark: #1da851;
+
+  --shadow-soft: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -8px rgb(15 23 42 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(15 23 42 / 0.05), 0 20px 40px -16px rgb(15 23 42 / 0.2);
+  --shadow-glow: 0 0 0 1px rgb(255 255 255 / 0.08), 0 30px 60px -20px rgb(0 0 0 / 0.6);
+
+  /* Animaciones decorativas (utilidades animate-*). */
+  --animate-flotar: flotar 7s ease-in-out infinite;
+  --animate-flotar-lento: flotar 11s ease-in-out infinite;
+  --animate-gradiente: gradiente 14s ease infinite;
+  --animate-pulso-suave: pulso-suave 4s ease-in-out infinite;
+
+  @keyframes flotar {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, -12px, 0);
+    }
+  }
+  @keyframes gradiente {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  @keyframes pulso-suave {
+    0%,
+    100% {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.85;
+      transform: scale(1.08);
+    }
+  }
+}
+
+/* Aparición al hacer scroll (ver components/ui/Reveal.tsx). */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/*
+ * Estilos base dentro de `@layer base` para que cualquier utilidad de Tailwind
+ * (p. ej. `text-white` en un título sobre fondo oscuro) pueda sobrescribirlos.
+ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-slate-700 antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-slate-900;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Foco visible y consistente en toda la web. */
+  :where(a, button, summary, input, textarea, select):focus-visible {
+    @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-white;
+  }
+
+  /* Quita el marcador nativo de <summary> (se dibuja uno propio). */
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
