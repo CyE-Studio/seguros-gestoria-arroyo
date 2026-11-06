@@ -1,0 +1,53 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "seguros-gestoria-arroyo",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": { "enabled": true },
+
+  // Variables públicas (no secretas). Los secretos van con `wrangler secret put`:
+  //   SANITY_REVALIDATE_SECRET
+  // Las NEXT_PUBLIC_* se incrustan en el build: deben estar también en el
+  // entorno al compilar (ver .github/workflows/cloudflare.yml).
+  "vars": {
+    "NEXT_PUBLIC_SANITY_DATASET": "production"
+  },
+
+  // Dominio propio: descomentar cuando el dominio esté en Cloudflare.
+  // "routes": [
+  //   { "pattern": "midominio.es", "custom_domain": true },
+  //   { "pattern": "www.midominio.es", "custom_domain": true }
+  // ],
+
+  "services": [
+    // Autorreferencia que usa OpenNext para la caché; debe coincidir con "name".
+    { "binding": "WORKER_SELF_REFERENCE", "service": "seguros-gestoria-arroyo" }
+  ],
+  "r2_buckets": [
+    // Crear antes del primer despliegue:
+    //   npx wrangler r2 bucket create seguros-gestoria-arroyo-cache
+    { "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "seguros-gestoria-arroyo-cache" }
+  ],
+  "d1_databases": [
+    // Crear antes del primer despliegue y pegar aquí el database_id:
+    //   npx wrangler d1 create seguros-gestoria-arroyo-tags
+    {
+      "binding": "NEXT_TAG_CACHE_D1",
+      "database_name": "seguros-gestoria-arroyo-tags",
+      "database_id": "PENDIENTE"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["DOQueueHandler"] }],
+  "images": {
+    // Optimización de imágenes de next/image con Cloudflare Images.
+    "binding": "IMAGES"
+  }
+}

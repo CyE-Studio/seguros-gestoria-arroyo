@@ -4,7 +4,7 @@ import type { NextConfig } from "next";
  * Exportación estática para GitHub Pages.
  * - STATIC_EXPORT=1 genera HTML/CSS/JS puros en `out/` (sin servidor Node).
  * - NEXT_PUBLIC_BASE_PATH es la subcarpeta del repositorio
- *   (https://<usuario>.github.io/<repo>). Vacío en Vercel o con dominio propio.
+ *   (https://<usuario>.github.io/<repo>). Vacío en Cloudflare o con dominio propio.
  */
 const esExportacionEstatica = process.env.STATIC_EXPORT === "1";
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH?.replace(/\/$/, "") || "";
@@ -25,3 +25,8 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+// En `next dev`, da acceso a los bindings de Cloudflare (R2, D1…) vía wrangler.
+if (process.env.NODE_ENV === "development" && !esExportacionEstatica) {
+  import("@opennextjs/cloudflare").then((m) => m.initOpenNextCloudflareForDev());
+}

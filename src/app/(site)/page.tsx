@@ -11,7 +11,13 @@ import { Ventajas } from "@/components/home/Ventajas";
 import { Faq } from "@/components/ui/Faq";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { FAQ_HOME } from "@/lib/faqs";
-import { negocioJsonLd } from "@/lib/seo";
+import { negocioJsonLd, urlCanonica } from "@/lib/seo";
+
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  alternates: { canonical: urlCanonica("/") },
+};
 
 export default function HomePage() {
   return (
