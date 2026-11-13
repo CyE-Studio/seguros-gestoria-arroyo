@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Manrope } from "next/font/google";
 import type { ReactNode } from "react";
 
-import { NEGOCIO, SITE_ORIGIN } from "@/lib/constants";
+import { NEGOCIO, SITE_ORIGIN, SITIO_INDEXABLE } from "@/lib/constants";
 
 import "./globals.css";
 
@@ -39,7 +39,9 @@ export const metadata: Metadata = {
     locale: "es_ES",
     siteName: NEGOCIO.nombre,
   },
-  robots: { index: true, follow: true },
+  robots: SITIO_INDEXABLE ? { index: true, follow: true } : { index: false, follow: false },
+  // Código de verificación de Google Search Console (opcional).
+  verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined },
 };
 
 /**

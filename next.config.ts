@@ -9,12 +9,46 @@ import type { NextConfig } from "next";
 const esExportacionEstatica = process.env.STATIC_EXPORT === "1";
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH?.replace(/\/$/, "") || "";
 
+/** Dominio definitivo sin "www" (p. ej. "midominio.com"), para redirigir www → dominio. */
+const dominio = (() => {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "").hostname.replace(/^www./, "");
+  } catch {
+    return "";
+  }
+})();
+
+const cabecerasSeguridad = [
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+  { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
+];
+
 const nextConfig: NextConfig = {
   ...(esExportacionEstatica && {
     output: "export",
     basePath,
     assetPrefix: basePath || undefined,
     trailingSlash: true,
+  }),
+  // headers() y redirects() no existen en la exportación estática.
+  ...(!esExportacionEstatica && {
+    async headers() {
+      return [{ source: "/:path*", headers: cabecerasSeguridad }];
+    },
+    async redirects() {
+      if (!dominio || !dominio.includes(".") || dominio.endsWith(".workers.dev")) return [];
+      return [
+        {
+          source: "/:path*",
+          has: [{ type: "host" as const, value: `www.${dominio}` }],
+          destination: `https://${dominio}/:path*`,
+          permanent: true,
+        },
+      ];
+    },
   }),
   images: {
     // Las imágenes que sube el cliente viven en el CDN de Sanity.

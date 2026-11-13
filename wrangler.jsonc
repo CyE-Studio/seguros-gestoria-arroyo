@@ -20,8 +20,8 @@
 
   // Dominio propio: descomentar cuando el dominio esté en Cloudflare.
   // "routes": [
-  //   { "pattern": "midominio.es", "custom_domain": true },
-  //   { "pattern": "www.midominio.es", "custom_domain": true }
+  //   { "pattern": "segurosgestoriarroyo.com", "custom_domain": true },
+  //   { "pattern": "www.segurosgestoriarroyo.com", "custom_domain": true }
   // ],
 
   "services": [
@@ -39,7 +39,7 @@
     {
       "binding": "NEXT_TAG_CACHE_D1",
       "database_name": "seguros-gestoria-arroyo-tags",
-      "database_id": "PENDIENTE"
+      "database_id": "6b51d59d-7de2-4269-bb4e-baf71ba126c5"
     }
   ],
   "durable_objects": {

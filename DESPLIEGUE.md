@@ -11,28 +11,34 @@ Navegador ──► Cloudflare Worker (Next.js)
 Sanity (contenido) ──webhook──► /api/revalidate
 ```
 
+## Estado
+
+- [x] Adaptador, caché y despliegue automático configurados y probados en local.
+- [x] Sesión de wrangler iniciada y base de datos D1 creada (su id ya está en `wrangler.jsonc`).
+- [ ] Workers Paid y R2 activados en el panel de Cloudflare (paso 1).
+- [ ] Bucket R2 y secreto del webhook (paso 1).
+- [ ] Proyecto de Sanity (paso 2).
+- [ ] Secretos y variables en GitHub (paso 3).
+- [ ] Dominio `segurosgestoriarroyo.com` conectado (paso 4).
+- [ ] Datos legales del cliente en `src/lib/constants.ts` (`LEGAL`, `NEGOCIO.email`).
+- [ ] Alta en Google (paso 5).
+
+`npm run comprobar` dice qué falta. Al publicar en el dominio definitivo, el
+despliegue se bloquea si quedan datos legales sin rellenar o Sanity sin configurar.
+
 ## 1. Cloudflare (una sola vez)
 
-1. Crear la cuenta en <https://dash.cloudflare.com> y contratar **Workers Paid** (5 $/mes).
-   El Worker ocupa ~5 MB comprimido y el plan gratuito admite 3 MB.
-2. Activar R2 en el panel (R2 → *Purchase R2*; el uso de esta web entra en la capa gratuita).
-3. En local, iniciar sesión y crear los recursos:
+1. En <https://dash.cloudflare.com>: contratar **Workers Paid** (5 $/mes; el Worker ocupa
+   ~5 MB comprimido y el plan gratuito admite 3 MB) y activar **R2** (*R2 → Purchase R2*;
+   el uso de esta web entra en la capa gratuita).
+2. Crear el bucket y el secreto del webhook (el mismo valor que se pondrá en Sanity, paso 2.5):
 
    ```bash
-   npx wrangler login
    npx wrangler r2 bucket create seguros-gestoria-arroyo-cache
-   npx wrangler d1 create seguros-gestoria-arroyo-tags
-   ```
-
-   Copiar el `database_id` que devuelve el último comando en `wrangler.jsonc`
-   (sustituye a `"PENDIENTE"`).
-4. Secreto del webhook (el mismo que se pondrá en Sanity, paso 2.5):
-
-   ```bash
    npx wrangler secret put SANITY_REVALIDATE_SECRET
    ```
 
-5. Crear un token de API: *My Profile → API Tokens → Create Token →* plantilla
+3. Crear un token de API para GitHub: *My Profile → API Tokens → Create Token →* plantilla
    **Edit Cloudflare Workers** (añadir permisos de **D1: Edit** y **Workers R2 Storage: Edit**).
 
 ## 2. Sanity (una sola vez)
@@ -69,9 +75,10 @@ En el repositorio → *Settings → Secrets and variables → Actions*:
 
 | Tipo | Nombre | Valor |
 |---|---|---|
-| Secret | `CLOUDFLARE_API_TOKEN` | token del paso 1.5 |
+| Secret | `CLOUDFLARE_API_TOKEN` | token del paso 1.3 |
 | Secret | `CLOUDFLARE_ACCOUNT_ID` | ID de cuenta (barra lateral del panel de Cloudflare) |
-| Variable | `NEXT_PUBLIC_SITE_URL` | `https://<dominio>` (sin barra final) |
+| Variable | `NEXT_PUBLIC_SITE_URL` | `https://segurosgestoriarroyo.com` (sin barra final) |
+| Variable | `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | código de Search Console (opcional) |
 | Variable | `NEXT_PUBLIC_SANITY_PROJECT_ID` | Project ID de Sanity |
 | Variable | `CLOUDFLARE_ENABLED` | `true` |
 
@@ -80,17 +87,30 @@ También se puede lanzar a mano desde *Actions → Publicar en Cloudflare Worker
 
 ## 4. Dominio
 
-- **.com / .net…**: comprarlo en Cloudflare (*Domain Registration*), a precio de coste.
-- **.es**: Cloudflare no los vende. Comprarlo en otro registrador (Dinahosting, DonDominio…),
-  añadir el dominio a Cloudflare (*Add a site*, plan Free) y cambiar los DNS del registrador
-  a los que indique Cloudflare.
+El dominio es **segurosgestoriarroyo.com** y su titular es el cliente (cláusula 10 del contrato).
 
-Después, descomentar `routes` en `wrangler.jsonc` con el dominio y desplegar.
-Por último, dar de alta la web en **Google Search Console** y enviar `/sitemap.xml`.
+1. Si no se compró en Cloudflare: *Add a site* (plan Free) y cambiar los DNS del registrador
+   a los que indique Cloudflare.
+2. Descomentar `routes` en `wrangler.jsonc` (ya tiene el dominio puesto) y desplegar.
+   Cloudflare crea los registros DNS y el certificado SSL. `www` redirige solo al dominio sin www.
+3. Mientras `NEXT_PUBLIC_SITE_URL` sea una dirección `workers.dev`, la web sale con
+   `noindex` y Google no la rastrea. Al poner el dominio definitivo pasa a ser indexable.
+
+## 5. Google
+
+1. **Search Console** (<https://search.google.com/search-console>): añadir la propiedad de tipo
+   *Dominio* y verificarla con el registro TXT en el DNS de Cloudflare (o con la variable
+   `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` y propiedad de tipo *Prefijo de URL*).
+2. *Sitemaps* → enviar `https://segurosgestoriarroyo.com/sitemap.xml`.
+3. *Inspección de URLs* → pedir la indexación de la portada, `/seguros` y `/gestoria`.
+4. **Perfil de Empresa de Google**: poner la web nueva en la ficha de la oficina. Es lo que más
+   pesa en las búsquedas locales ("seguros Arroyo de San Serván").
+5. Pedir a MAPFRE que enlace la web desde la página de la oficina L6422, si lo permiten.
 
 ## Comandos útiles
 
 ```bash
 npm run cf:preview   # compila y prueba el Worker en local (http://localhost:8787)
-npm run cf:deploy    # compila y publica desde local (mejor usar GitHub Actions)
+npm run comprobar    # qué falta para publicar en el dominio definitivo
+npm run cf:deploy    # comprueba, compila y publica desde local (mejor usar GitHub Actions)
 ```

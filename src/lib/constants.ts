@@ -70,6 +70,15 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3
  */
 export const SITE_ORIGIN = new URL(SITE_URL).origin;
 
+/**
+ * Solo el dominio definitivo debe aparecer en Google. Las direcciones de
+ * prueba (localhost, *.workers.dev, GitHub Pages) se marcan como noindex para
+ * no competir con la web real ni indexar contenido de demostración.
+ */
+export const SITIO_INDEXABLE = !/(^localhost$|^127.|.workers.dev$|.github.io$|.pages.dev$)/.test(
+  new URL(SITE_URL).hostname,
+);
+
 export const NAV_LINKS = [
   { href: "/gestoria", label: "Gestoría" },
   { href: "/seguros", label: "Seguros" },
