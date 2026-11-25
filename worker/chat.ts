@@ -210,7 +210,10 @@ async function preguntarAClaude(env: Env, sistema: string, turnos: Turno[]): Pro
       // Parte fija (instrucciones + información de la oficina): se guarda en caché entre peticiones.
       { type: "text" as const, text: sistema, cache_control: { type: "ephemeral" as const } },
       // Parte que cambia: va después de la marca de caché para no invalidarla.
-      { type: "text" as const, text: `Ahora mismo en la oficina es ${fechaEnLaOficina()}.` },
+      {
+        type: "text" as const,
+        text: `Ahora mismo en la oficina es ${fechaEnLaOficina()}. Este dato es para cuando alguien pregunte si está abierto o cuándo puede ir; en el resto de respuestas no menciones si la oficina está abierta o cerrada en este momento.`,
+      },
     ],
     messages: turnos,
   };
