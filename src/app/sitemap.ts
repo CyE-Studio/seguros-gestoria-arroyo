@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { SITE_URL } from "@/lib/constants";
-import { getCampanas } from "@/services/sanity/campanas";
+import { getCampanas } from "@/services/campanas";
 
 export const dynamic = "force-static";
 

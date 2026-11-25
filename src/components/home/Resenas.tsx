@@ -4,7 +4,7 @@ import { Icon } from "@/components/ui/Icon";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { GOOGLE_RESENAS_URL, RESENAS, RESENAS_DEMO } from "@/lib/constants";
-import { sanityConfigurado } from "@/services/sanity/env";
+import { esModoDemo } from "@/services/campanas";
 
 function Estrellas({ n }: { n: number }) {
   return (
@@ -29,7 +29,7 @@ function Estrellas({ n }: { n: number }) {
  * modo demo, muestra ejemplos marcados como tales para enseñar el diseño.
  */
 export function Resenas() {
-  const esDemo = RESENAS.length === 0 && !sanityConfigurado;
+  const esDemo = RESENAS.length === 0 && esModoDemo();
   const lista = RESENAS.length > 0 ? RESENAS : esDemo ? RESENAS_DEMO : [];
   if (lista.length === 0) return null;
 

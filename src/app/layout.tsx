@@ -47,7 +47,7 @@ export const metadata: Metadata = {
 /**
  * Layout raíz: solo <html>/<body> y las fuentes.
  * El chrome del sitio (header/footer) vive en el grupo de rutas (site)
- * para que /studio se renderice limpio.
+ * (el panel de campañas no forma parte de esta aplicación: es el Worker de `worker/`).
  */
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (

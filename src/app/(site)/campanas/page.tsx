@@ -8,7 +8,7 @@ import { CampanasGrid } from "@/components/campanas/CampanasGrid";
 import { Container } from "@/components/ui/Container";
 import { PageHero } from "@/components/ui/PageHero";
 import { NEGOCIO } from "@/lib/constants";
-import { getCampanas } from "@/services/sanity/campanas";
+import { getCampanas } from "@/services/campanas";
 
 export const metadata: Metadata = {
   title: "Campañas y promociones",
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
 };
 
 /**
- * Página estática con ISR por etiquetas: se genera en build y solo se
- * regenera cuando el webhook de Sanity llama a /api/revalidate.
+ * Página estática: se genera al compilar con las campañas publicadas en el
+ * panel. Publicar desde el panel lanza una compilación nueva.
  */
 export default async function CampanasPage() {
   const campanas = await getCampanas();

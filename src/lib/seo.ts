@@ -20,6 +20,7 @@ export function negocioJsonLd() {
     description: NEGOCIO.descripcion,
     url: SITE_URL,
     telephone: NEGOCIO.telefono.e164,
+    email: NEGOCIO.email,
     image: `${SITE_URL}/opengraph-image.png`,
     priceRange: "€€",
     address: {
@@ -38,18 +39,10 @@ export function negocioJsonLd() {
     openingHoursSpecification: [
       {
         "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday"],
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
         opens: "09:00",
         closes: "14:00",
       },
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday"],
-        opens: "17:00",
-        closes: "19:00",
-      },
-      { "@type": "OpeningHoursSpecification", dayOfWeek: "Friday", opens: "09:00", closes: "14:00" },
-      { "@type": "OpeningHoursSpecification", dayOfWeek: "Saturday", opens: "10:00", closes: "12:00" },
     ],
     hasMap: NEGOCIO.mapsUrl,
     sameAs: [NEGOCIO.mapfre.url],

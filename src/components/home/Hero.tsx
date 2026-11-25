@@ -116,7 +116,7 @@ export function Hero() {
                       href="/contacto"
                       className="group/l mt-1 inline-flex items-center gap-1 text-sm font-semibold text-brand-700 hover:text-brand-600"
                     >
-                      Horario de verano y móviles
+                      Más teléfonos y cómo llegar
                       <Icon name="arrow-right" className="h-3.5 w-3.5 transition-transform group-hover/l:translate-x-0.5" />
                     </Link>
                   </dd>

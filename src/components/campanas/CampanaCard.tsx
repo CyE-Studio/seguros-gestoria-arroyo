@@ -3,8 +3,8 @@ import Link from "next/link";
 
 import { Icon } from "@/components/ui/Icon";
 import { Spotlight } from "@/components/ui/Spotlight";
+import { rutaPublica } from "@/lib/constants";
 import { formatearFecha } from "@/lib/format";
-import { urlFor } from "@/services/sanity/image";
 import type { CampanaResumen } from "@/types/campana";
 
 import { CategoriaBadge } from "./CategoriaBadge";
@@ -19,7 +19,7 @@ interface CampanaCardProps {
 export function CampanaCard({ campana, prioridad = false }: CampanaCardProps) {
   const { titulo, slug, imagenPrincipal, fechaPublicacion, categoria, resumen, portada } = campana;
   const href = `/campanas/${slug}`;
-  const imagenUrl = imagenPrincipal ? urlFor(imagenPrincipal).width(800).height(500).url() : null;
+  const imagenUrl = imagenPrincipal ? rutaPublica(imagenPrincipal.srcTarjeta) : null;
 
   return (
     <Spotlight
@@ -33,8 +33,6 @@ export function CampanaCard({ campana, prioridad = false }: CampanaCardProps) {
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             priority={prioridad}
-            placeholder={imagenPrincipal?.lqip ? "blur" : "empty"}
-            blurDataURL={imagenPrincipal?.lqip ?? undefined}
             className="object-cover transition duration-500 group-hover:scale-105"
           />
         ) : (

@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { getUltimasCampanas } from "@/services/sanity/campanas";
+import { getUltimasCampanas } from "@/services/campanas";
 
-/** Server Component asíncrono: trae las 3 últimas campañas con la misma caché/ISR que el listado. */
+/** Server Component asíncrono: las 3 últimas campañas, leídas al compilar como el listado. */
 export async function UltimasCampanas() {
   const campanas = await getUltimasCampanas(3);
 

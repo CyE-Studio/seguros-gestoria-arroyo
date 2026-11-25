@@ -1,24 +1,31 @@
-import type { PortableTextBlock } from "@portabletext/react";
-
-import type { CATEGORIAS_CAMPANA } from "../../sanity/schemaTypes/campana";
 import type { IconName } from "@/components/ui/Icon";
 
-/** "seguros" | "gestoria" — derivado del esquema para que no se desincronicen. */
+/** Categorías de una campaña. El panel (worker/) usa los mismos valores. */
+export const CATEGORIAS_CAMPANA = [
+  { title: "Seguros", value: "seguros" },
+  { title: "Gestoría", value: "gestoria" },
+] as const;
+
 export type CategoriaCampana = (typeof CATEGORIAS_CAMPANA)[number]["value"];
 
-export interface SanityImagen {
-  _type: "image";
-  asset: { _ref: string; _type: "reference" };
-  hotspot?: { x: number; y: number; height: number; width: number };
-  crop?: { top: number; bottom: number; left: number; right: number };
-  alt?: string | null;
-  /** Placeholder borroso en base64 generado por Sanity. */
-  lqip?: string | null;
+/**
+ * Imagen de una campaña. Se sube desde el panel y, al compilar, se copia a
+ * `public/campanas-img/` (scripts/traer-campanas.mjs): la web la sirve como
+ * un fichero estático más.
+ */
+export interface ImagenCampana {
+  /** Versión grande (hasta 1600 px de ancho), para la página de la campaña. */
+  src: string;
+  /** Versión reducida (800 px), para las tarjetas de los listados. */
+  srcTarjeta: string;
+  alt: string | null;
+  ancho: number;
+  alto: number;
 }
 
 /**
  * Portada decorativa cuando una campaña no tiene imagen (o en modo demo):
- * un degradado de marca con un icono. No viene de Sanity.
+ * un degradado de marca con un icono.
  */
 export interface PortadaDecorativa {
   /** Clases Tailwind del degradado, p. ej. "from-brand-700 to-brand-950". */
@@ -31,7 +38,7 @@ export interface CampanaResumen {
   _id: string;
   titulo: string;
   slug: string;
-  imagenPrincipal: SanityImagen | null;
+  imagenPrincipal: ImagenCampana | null;
   /** ISO 8601 */
   fechaPublicacion: string;
   categoria: CategoriaCampana;
@@ -41,5 +48,6 @@ export interface CampanaResumen {
 
 /** Campaña completa para la página de detalle. */
 export interface CampanaDetalle extends CampanaResumen {
-  cuerpo: PortableTextBlock[] | null;
+  /** Texto con el formato de `src/lib/texto-campana.ts`. */
+  cuerpo: string | null;
 }

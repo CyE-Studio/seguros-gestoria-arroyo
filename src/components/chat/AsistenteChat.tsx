@@ -294,7 +294,7 @@ export function AsistenteChat() {
             </button>
           </div>
           <p className="mt-2 text-center text-[11px] text-slate-400">
-            Asistente de demostración con respuestas predefinidas · Para hablar con una persona:{" "}
+            Asistente automático con respuestas predefinidas · Para hablar con una persona:{" "}
             <a href={NEGOCIO.whatsapp.href} target="_blank" rel="noopener noreferrer" className="font-semibold text-slate-600">
               WhatsApp
             </a>

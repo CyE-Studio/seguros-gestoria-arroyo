@@ -1,0 +1,17 @@
+# Avisos y actualizaciones automáticas de dependencias con fallos de seguridad.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      menores:
+        update-types: [minor, patch]
+
+  # Las acciones de los workflows van fijadas por commit; Dependabot las mantiene al día.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

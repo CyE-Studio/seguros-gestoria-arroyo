@@ -4,7 +4,7 @@ import type { IconName } from "@/components/ui/Icon";
  * Datos del negocio. Única fuente de verdad para dirección, teléfono, etc.
  * Los datos de la oficina MAPFRE provienen de su ficha oficial:
  * https://www.mapfre.es/oficina/es_ES/arroyo-san-servan/L6422/
- * TODO: confirmar con el cliente nombre comercial, email y horario de la gestoría.
+ * Email, horario y datos legales confirmados por el cliente en noviembre de 2026.
  */
 export const NEGOCIO = {
   nombre: "Seguros y Gestoría Arroyo",
@@ -33,23 +33,16 @@ export const NEGOCIO = {
     visible: "924 34 22 02",
     href: "https://wa.me/34924342202?text=Hola%2C%20me%20gustar%C3%ADa%20hacer%20una%20consulta",
   },
-  /** TODO: pendiente de confirmar con el cliente. No se muestra en la web hasta entonces. */
-  email: "",
-  /** Horario habitual (septiembre a junio). */
+  email: "alfonsosuarez71@gmail.com",
+  /** Atención al público: el mismo horario todo el año. */
   horario: [
-    { dias: "Lunes a jueves", horas: "9:00 – 14:00 y 17:00 – 19:00" },
-    { dias: "Viernes", horas: "9:00 – 14:00" },
-    { dias: "Sábados", horas: "10:00 – 12:00" },
-    { dias: "Domingos", horas: "Cerrado" },
-  ],
-  /** Horario de verano. */
-  horarioVerano: [
-    { dias: "Lunes a viernes", horas: "8:00 – 14:30" },
-    { dias: "Sábados", horas: "10:00 – 12:00" },
-    { dias: "Domingos", horas: "Cerrado" },
+    { dias: "Lunes a viernes", horas: "9:00 – 14:00" },
+    { dias: "Sábados y domingos", horas: "Cerrado" },
   ],
   mapfre: {
     codigoOficina: "L6422",
+    /** Número de oficina delegada dentro de MAPFRE. */
+    numeroDelegado: "1994",
     tipo: "Oficina delegada",
     delegado: "Alfonso Suárez Barragán",
     acreditacion: "Asesor técnico financiero acreditado",
@@ -75,9 +68,18 @@ export const SITE_ORIGIN = new URL(SITE_URL).origin;
  * prueba (localhost, *.workers.dev, GitHub Pages) se marcan como noindex para
  * no competir con la web real ni indexar contenido de demostración.
  */
-export const SITIO_INDEXABLE = !/(^localhost$|^127.|.workers.dev$|.github.io$|.pages.dev$)/.test(
+export const SITIO_INDEXABLE = !/(^localhost$|^127\.|\.workers\.dev$|\.github\.io$|\.pages\.dev$)/.test(
   new URL(SITE_URL).hostname,
 );
+
+/** Subcarpeta en la que se publica la web (solo en la demo de GitHub Pages). */
+export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH?.replace(/\/$/, "") || "";
+
+/**
+ * Ruta de un fichero de `public/` tal y como hay que pedirlo al servidor.
+ * next/image no añade el basePath a las rutas que se le pasan como texto.
+ */
+export const rutaPublica = (ruta: string): string => `${BASE_PATH}${ruta}`;
 
 export const NAV_LINKS = [
   { href: "/gestoria", label: "Gestoría" },
@@ -217,34 +219,17 @@ export type Tramo = readonly [string, string];
 
 /**
  * Horario estructurado para calcular "Abierto ahora" en el navegador.
- * Índices: 0 = domingo … 6 = sábado. Debe coincidir con NEGOCIO.horario.
- * TODO: confirmar con el cliente los meses exactos del horario de verano.
+ * Índices: 0 = domingo … 6 = sábado. Debe coincidir con NEGOCIO.horario
+ * y con `openingHoursSpecification` en src/lib/seo.ts.
  */
-export const HORARIO_SEMANAL = {
-  normal: {
-    0: [],
-    1: [["09:00", "14:00"], ["17:00", "19:00"]],
-    2: [["09:00", "14:00"], ["17:00", "19:00"]],
-    3: [["09:00", "14:00"], ["17:00", "19:00"]],
-    4: [["09:00", "14:00"], ["17:00", "19:00"]],
-    5: [["09:00", "14:00"]],
-    6: [["10:00", "12:00"]],
-  },
-  verano: {
-    0: [],
-    1: [["08:00", "14:30"]],
-    2: [["08:00", "14:30"]],
-    3: [["08:00", "14:30"]],
-    4: [["08:00", "14:30"]],
-    5: [["08:00", "14:30"]],
-    6: [["10:00", "12:00"]],
-  },
-  /** Meses (1–12) en los que aplica el horario de verano. */
-  mesesVerano: [7, 8],
-} as const satisfies {
-  normal: Record<number, readonly Tramo[]>;
-  verano: Record<number, readonly Tramo[]>;
-  mesesVerano: readonly number[];
+export const HORARIO_SEMANAL: Record<number, readonly Tramo[]> = {
+  0: [],
+  1: [["09:00", "14:00"]],
+  2: [["09:00", "14:00"]],
+  3: [["09:00", "14:00"]],
+  4: [["09:00", "14:00"]],
+  5: [["09:00", "14:00"]],
+  6: [],
 };
 
 /**
@@ -318,15 +303,15 @@ export const MOTIVOS_CITA = [
 ] as const;
 
 /**
- * Datos del titular para los textos legales. Rellenar con los datos reales
- * del cliente antes de publicar (ver PLAN-DEMO.md).
+ * Datos del titular para los textos legales, facilitados por el cliente.
  */
 export const LEGAL = {
-  razonSocial: "[NOMBRE O RAZÓN SOCIAL DEL TITULAR]",
-  nif: "[NIF / CIF]",
-  email: "[EMAIL DE CONTACTO]",
-  registroMediador: "[Nº de registro en la DGSFP como agente de seguros exclusivo]",
-  ultimaActualizacion: "octubre de 2026",
+  razonSocial: "ALFONSO Y SEGURA S.L.",
+  nif: "B06323067",
+  email: NEGOCIO.email,
+  /** Número de inscripción en el registro de distribuidores de la DGSFP. */
+  registroMediador: "C0058B06323067",
+  ultimaActualizacion: "noviembre de 2026",
 } as const;
 
 export const PASOS = [

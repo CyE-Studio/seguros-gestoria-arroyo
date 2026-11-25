@@ -22,10 +22,7 @@ function ahoraEnMadrid(): Date {
 }
 
 function tramosDe(fecha: Date): readonly Tramo[] {
-  const mes = fecha.getMonth() + 1;
-  const esVerano = (HORARIO_SEMANAL.mesesVerano as readonly number[]).includes(mes);
-  const tabla = esVerano ? HORARIO_SEMANAL.verano : HORARIO_SEMANAL.normal;
-  return tabla[fecha.getDay() as keyof typeof tabla] ?? [];
+  return HORARIO_SEMANAL[fecha.getDay()] ?? [];
 }
 
 function calcularEstado(): Estado {

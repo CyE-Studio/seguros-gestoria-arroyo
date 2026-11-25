@@ -13,31 +13,37 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { JsonLd } from "@/components/ui/JsonLd";
-import { NEGOCIO, SITE_URL } from "@/lib/constants";
+import { NEGOCIO, SITE_ORIGIN, SITE_URL, rutaPublica } from "@/lib/constants";
 import { formatearFecha } from "@/lib/format";
-import { getCampanaPorSlug, getCampanaSlugs } from "@/services/sanity/campanas";
-import { urlFor } from "@/services/sanity/image";
+import { getCampanaPorSlug, getCampanaSlugs } from "@/services/campanas";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-/** Pre-renderiza todas las campañas en build; las nuevas se generan bajo demanda. */
+/**
+ * La web es estática: todas las campañas se generan al compilar. Al publicar
+ * desde el panel se lanza una compilación nueva.
+ *
+ * Next.js no admite una ruta dinámica sin ninguna página en una exportación
+ * estática, así que, si todavía no hay campañas, se genera una de relleno que
+ * responde "no encontrada".
+ */
+const SLUG_RELLENO = "sin-campanas";
+
 export async function generateStaticParams() {
   const slugs = await getCampanaSlugs();
-  return slugs.map((slug) => ({ slug }));
+  return (slugs.length > 0 ? slugs : [SLUG_RELLENO]).map((slug) => ({ slug }));
 }
 
-export const dynamicParams = true;
+export const dynamicParams = false;
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const campana = await getCampanaPorSlug(slug);
   if (!campana) return { title: "Campaña no encontrada" };
 
-  const imagen = campana.imagenPrincipal
-    ? urlFor(campana.imagenPrincipal).width(1200).height(630).url()
-    : undefined;
+  const imagen = campana.imagenPrincipal;
 
   return {
     title: campana.titulo,
@@ -48,7 +54,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: campana.titulo,
       description: campana.resumen ?? undefined,
       publishedTime: campana.fechaPublicacion,
-      images: imagen ? [{ url: imagen, width: 1200, height: 630 }] : undefined,
+      images: imagen
+        ? [{ url: rutaPublica(imagen.src), width: imagen.ancho, height: imagen.alto }]
+        : undefined,
     },
   };
 }
@@ -67,7 +75,7 @@ export default async function CampanaPage({ params }: PageProps) {
     headline: titulo,
     description: resumen ?? undefined,
     datePublished: fechaPublicacion,
-    image: imagenPrincipal ? [urlFor(imagenPrincipal).width(1200).height(630).url()] : undefined,
+    image: imagenPrincipal ? [`${SITE_ORIGIN}${rutaPublica(imagenPrincipal.src)}`] : undefined,
     author: { "@type": "Organization", name: NEGOCIO.nombre, url: SITE_URL },
     publisher: { "@type": "Organization", name: NEGOCIO.nombre, url: SITE_URL },
     mainEntityOfPage: `${SITE_URL}/campanas/${slug}`,
@@ -98,13 +106,11 @@ export default async function CampanaPage({ params }: PageProps) {
         <div className="relative mt-10 aspect-[16/9] overflow-hidden rounded-3xl bg-slate-100 shadow-soft sm:aspect-[21/9]">
           {imagenPrincipal ? (
             <Image
-              src={urlFor(imagenPrincipal).width(1600).height(900).url()}
+              src={rutaPublica(imagenPrincipal.src)}
               alt={imagenPrincipal.alt ?? titulo}
               fill
               priority
               sizes="(min-width: 1152px) 1152px, 100vw"
-              placeholder={imagenPrincipal.lqip ? "blur" : "empty"}
-              blurDataURL={imagenPrincipal.lqip ?? undefined}
               className="object-cover"
             />
           ) : (
@@ -112,7 +118,7 @@ export default async function CampanaPage({ params }: PageProps) {
           )}
         </div>
 
-        {cuerpo && cuerpo.length > 0 && (
+        {cuerpo && cuerpo.trim() !== "" && (
           <div className="mt-12 max-w-3xl text-lg">
             <CuerpoCampana value={cuerpo} />
           </div>

@@ -5,35 +5,23 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
-    "sanity:manage": "sanity manage",
-    "sanity:deploy": "sanity deploy",
-    "export:prepare": "node scripts/static-export.mjs prepare",
-    "export:restore": "node scripts/static-export.mjs restore",
-    "cf:build": "opennextjs-cloudflare build",
-    "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "cf:deploy": "node scripts/comprobar-produccion.mjs && opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
-    "comprobar": "node scripts/comprobar-produccion.mjs"
+    "typecheck": "tsc --noEmit && tsc --noEmit -p worker",
+    "contenido": "node scripts/traer-campanas.mjs",
+    "comprobar": "node scripts/comprobar-produccion.mjs",
+    "panel:dev": "wrangler d1 migrations apply DB --local && wrangler dev",
+    "panel:invitar": "node scripts/invitar.mjs",
+    "cf:build": "node scripts/comprobar-produccion.mjs && node scripts/traer-campanas.mjs && next build",
+    "cf:publicar": "wrangler d1 migrations apply DB --remote && wrangler deploy",
+    "cf:deploy:inicial": "node scripts/comprobar-produccion.mjs && node scripts/traer-campanas.mjs --vacio && next build && npm run cf:publicar"
   },
   "dependencies": {
-    "@opennextjs/cloudflare": "^1.20.16",
-    "@portabletext/react": "^3.2.1",
-    "@sanity/client": "^7.0.0",
-    "@sanity/icons": "^3.7.0",
-    "@sanity/image-url": "^1.1.0",
-    "@sanity/locale-es-es": "^1.1.0",
-    "@sanity/vision": "^4.0.0",
     "next": "^15.5.0",
-    "next-sanity": "^10.0.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "sanity": "^4.0.0",
-    "styled-components": "^6.1.0"
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261124.2",
     "@eslint/eslintrc": "^3.3.0",
     "@tailwindcss/postcss": "^4.1.0",
     "@types/node": "^22.0.0",
@@ -49,5 +37,10 @@
     "esbuild@0.28.2": true,
     "esbuild@0.27.0": true,
     "workerd@1.20261104.1": true
+  },
+  "overrides": {
+    "next": {
+      "postcss": "^8.5.23"
+    }
   }
 }

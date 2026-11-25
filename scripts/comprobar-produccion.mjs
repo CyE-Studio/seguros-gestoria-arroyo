@@ -4,7 +4,7 @@
  * Si NEXT_PUBLIC_SITE_URL apunta a una dirección de prueba (localhost,
  * *.workers.dev, GitHub Pages), solo avisa. Si apunta al dominio real, falla
  * cuando queda algo que no puede salir a producción: datos legales sin
- * rellenar o la web aún en modo demostración.
+ * rellenar o la web aún en modo demostración (sin las campañas del panel).
  *
  * Uso: node scripts/comprobar-produccion.mjs
  */
@@ -35,10 +35,12 @@ if (marcadores.length > 0) {
   errores.push(`Datos legales sin rellenar en src/lib/constants.ts (LEGAL): ${marcadores.join(", ")}`);
 }
 
-// 2. Sanity: sin projectId la web muestra campañas y reseñas de ejemplo.
-const projectId = (process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "").trim();
-if (!projectId || projectId === "pendiente") {
-  errores.push("NEXT_PUBLIC_SANITY_PROJECT_ID vacío: la web saldría en modo demostración.");
+// 2. Campañas: sin PANEL_URL la web se compila con campañas y reseñas de ejemplo.
+//    En el primer despliegue (cf:deploy:inicial) el panel aún no existe y se publica sin campañas.
+//    En los demás (cf:build, que ejecuta Cloudflare) PANEL_URL es obligatorio.
+const primerDespliegue = process.env.npm_lifecycle_event === "cf:deploy:inicial";
+if (!(process.env.PANEL_URL ?? "").trim() && !primerDespliegue) {
+  errores.push("PANEL_URL vacío: la web saldría en modo demostración, con campañas de ejemplo.");
 }
 
 // 3. Recomendables.

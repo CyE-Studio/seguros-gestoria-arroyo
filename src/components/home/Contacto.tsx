@@ -34,7 +34,7 @@ interface ContactoProps {
 }
 
 export function Contacto({ compacto = false }: ContactoProps) {
-  const { direccion, telefono, moviles, whatsapp, horario, horarioVerano } = NEGOCIO;
+  const { direccion, telefono, moviles, whatsapp, horario } = NEGOCIO;
 
   return (
     <section
@@ -80,6 +80,15 @@ export function Contacto({ compacto = false }: ContactoProps) {
                   </span>
                 ))}
               </p>
+              <p className="mt-1 text-sm text-slate-600">
+                Correo:{" "}
+                <a
+                  href={`mailto:${NEGOCIO.email}`}
+                  className="break-all font-medium text-slate-900 hover:text-brand-700"
+                >
+                  {NEGOCIO.email}
+                </a>
+              </p>
               <Button href={whatsapp.href} variante="whatsapp" className="mt-5 w-full">
                 <WhatsAppIcon className="h-5 w-5" />
                 Escribir por WhatsApp
@@ -120,9 +129,8 @@ export function Contacto({ compacto = false }: ContactoProps) {
                 </p>
               </div>
               <EstadoApertura className="mt-4" />
-              <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
-                <Horario titulo="Septiembre a junio" filas={horario} />
-                <Horario titulo="Verano" filas={horarioVerano} />
+              <div className="mt-4">
+                <Horario titulo="Atención al público, todo el año" filas={horario} />
               </div>
             </div>
           </address>

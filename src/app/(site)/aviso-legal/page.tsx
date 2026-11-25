@@ -34,11 +34,12 @@ export default function AvisoLegalPage() {
         electrónico {LEGAL.email}.
       </p>
       <p>
-        La actividad de mediación de seguros se ejerce como agente de seguros exclusivo de MAPFRE
-        ESPAÑA, Compañía de Seguros y Reaseguros, S.A., inscrito en el Registro administrativo de
-        distribuidores de seguros y reaseguros de la Dirección General de Seguros y Fondos de
-        Pensiones con la clave <strong>{LEGAL.registroMediador}</strong>. MAPFRE es una marca
-        registrada de MAPFRE S.A.
+        La actividad de mediación de seguros se ejerce como agencia de seguros exclusiva de MAPFRE
+        ESPAÑA, Compañía de Seguros y Reaseguros, S.A. (oficina delegada n.º{" "}
+        {NEGOCIO.mapfre.numeroDelegado}), inscrita en el Registro administrativo de distribuidores
+        de seguros y reaseguros de la Dirección General de Seguros y Fondos de Pensiones con el
+        número <strong>{LEGAL.registroMediador}</strong>. MAPFRE es una marca registrada de MAPFRE
+        S.A.
       </p>
 
       <h2>2. Objeto</h2>

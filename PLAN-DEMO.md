@@ -9,7 +9,7 @@ Marca cada casilla al completarla. Las fases van en orden: cada una deja la web 
 
 - [x] Diseño completo: portada, Gestoría, Seguros, Campañas, Contacto, 404, legales.
 - [x] Parallax, animaciones de aparición, cabecera transparente en portada.
-- [x] Modo demostración: campañas y reseñas de ejemplo sin necesidad de Sanity.
+- [x] Modo demostración: campañas y reseñas de ejemplo sin necesidad del panel.
 - [x] SEO: páginas propias por servicio, metadatos, datos estructurados (negocio local, FAQ, migas, artículos), sitemap, robots, imagen para compartir, favicon.
 - [x] Indicador "Abierto ahora" calculado con el horario real.
 - [x] Mapa de Google bajo demanda (sin cookies hasta que el usuario lo pide).
@@ -24,8 +24,8 @@ Marca cada casilla al completarla. Las fases van en orden: cada una deja la web 
 - **URL:** https://cye-studio.github.io/seguros-gestoria-arroyo/
 - **Repositorio:** https://github.com/CyE-Studio/seguros-gestoria-arroyo (público; Pages gratuito solo funciona en repos públicos)
 - Cada `git push` a `main` vuelve a publicar la web en 1–2 minutos (flujo en `.github/workflows/pages.yml`).
-- Es una exportación estática: funciona todo **menos** el Studio de Sanity y el webhook de ISR. Para eso está la Fase 3 (Vercel).
-- Para probar la exportación en local: `npm run export:prepare`, luego `STATIC_EXPORT=1 NEXT_PUBLIC_BASE_PATH=/seguros-gestoria-arroyo npm run build`, y al terminar `npm run export:restore` (en Git Bash, antepón `MSYS_NO_PATHCONV=1`).
+- Es la misma web estática que irá a producción, en modo demostración: todo funciona **menos** el panel de campañas (`/panel`), que vive en Cloudflare. Ver [DESPLIEGUE.md](DESPLIEGUE.md).
+- Para probar la exportación en local: `NEXT_PUBLIC_BASE_PATH=/seguros-gestoria-arroyo npm run build` (en Git Bash, antepón `MSYS_NO_PATHCONV=1`).
 
 ---
 
@@ -51,7 +51,7 @@ Marca cada casilla al completarla. Las fases van en orden: cada una deja la web 
 ### 1.3 Preparar el guion de la demo (10 minutos de presentación)
 1. **Portada en móvil primero**: es donde le llegará el 80 % de los clientes. Enseña la barra de llamar/WhatsApp.
 2. **Portada en escritorio**: hero con la oficina, parallax, "Abierto ahora", dos servicios.
-3. **Campañas**: explica que él mismo las publicará desde `/studio` sin tocar código (enseña una de ejemplo).
+3. **Campañas**: explica que él mismo las publicará desde `/panel` sin tocar código (enseña una de ejemplo).
 4. **Gestoría y Seguros**: cada servicio tiene página propia para salir en Google por "gestoría Arroyo de San Serván", "seguro de coche Arroyo", etc.
 5. **Contacto**: mapa, horario, formulario de cita por WhatsApp.
 6. **Cierra con lo que necesitas de él** (lista 1.2) y los plazos de la Fase 3.
@@ -92,18 +92,9 @@ Marca cada casilla al completarla. Las fases van en orden: cada una deja la web 
 
 ## Fase 3 · Contenido real y publicación (medio día)
 
-### 3.1 Sanity (gestor de campañas)
-- [ ] Crea cuenta y proyecto en [sanity.io/manage](https://www.sanity.io/manage) (plan gratuito). Copia el `projectId`.
-- [ ] En `.env.local`: `NEXT_PUBLIC_SANITY_PROJECT_ID=<projectId>` y un `SANITY_REVALIDATE_SECRET` largo y aleatorio.
-- [ ] En Sanity → Settings → API → CORS origins: añade `http://localhost:3000` y el dominio final (con credenciales).
-- [ ] Reinicia `npm run dev` y entra en `/studio`. Publica 3–4 campañas reales (con imagen: las tarjetas quedan mucho mejor con foto).
-- [ ] Al configurar Sanity, el modo demo se apaga solo: desaparecen campañas y reseñas de ejemplo.
-
-### 3.2 Despliegue
-- [ ] Sube el proyecto a GitHub (repositorio privado).
-- [ ] Crea el proyecto en [Vercel](https://vercel.com) importando el repo. Añade las mismas variables de `.env.local` en Settings → Environment Variables, con `NEXT_PUBLIC_SITE_URL=https://<dominio>`.
-- [ ] Conecta el dominio del cliente (o compra uno: `.es` o `.com`). Vercel gestiona el certificado HTTPS.
-- [ ] En Sanity → Settings → API → Webhooks, crea el webhook que indica el README (URL `https://<dominio>/api/revalidate`, secreto igual que `SANITY_REVALIDATE_SECRET`). Así cada campaña publicada aparece en la web al instante.
+### 3.1 Publicación y panel de campañas
+- [ ] Sigue [DESPLIEGUE.md](DESPLIEGUE.md): primer despliegue en Cloudflare, tu acceso al panel, publicación automática, dominio e invitación al cliente. No hay Sanity ni Vercel: el panel es propio y todo cabe en los planes gratuitos.
+- [ ] Entra en `/panel` y publica 3–4 campañas reales (con imagen: las tarjetas quedan mucho mejor con foto). En cuanto la web se compila con el panel, desaparecen las campañas y reseñas de ejemplo.
 
 ### 3.3 Comprobación final
 - [ ] `npm run build` sin errores y `npm run lint` limpio.
@@ -116,7 +107,7 @@ Marca cada casilla al completarla. Las fases van en orden: cada una deja la web 
 ## Fase 4 · Posicionamiento local (la primera semana tras publicar)
 
 - [ ] **Perfil de Empresa de Google** (antes Google My Business): reclama o crea la ficha con el mismo nombre, dirección, teléfono y horario que la web. Añade la URL de la web y las fotos. Es el factor nº 1 para salir en el mapa de Google.
-- [ ] **Search Console**: añade el dominio, verifica con Vercel (registro DNS) y envía `https://<dominio>/sitemap.xml`.
+- [ ] **Search Console**: añade el dominio, verifica con un registro DNS en Cloudflare y envía `https://<dominio>/sitemap.xml`.
 - [ ] Pide al cliente que solicite reseñas a 5–10 clientes satisfechos con el enlace directo de Google.
 - [ ] Comprueba que la ficha de mapfre.es enlaza (o puede enlazar) a la nueva web.
 - [ ] Publica una campaña nueva al mes como mínimo: contenido fresco + aviso por WhatsApp a clientes.
@@ -129,7 +120,7 @@ Marca cada casilla al completarla. Las fases van en orden: cada una deja la web 
 - Botón flotante abajo a la derecha en todas las páginas. Abre un chat que responde dudas frecuentes (horario, cómo llegar, renta, transferencias, partes, promociones, seguros…) y deriva a WhatsApp o teléfono cuando no sabe.
 - **No es IA real**: responde con la base de conocimiento de `src/lib/asistente.ts` (palabras clave → respuesta). Se puede ampliar añadiendo intenciones ahí.
 - Se abre solo con la URL `…/#asistente` (útil para enseñarlo en la demo).
-- **Para hacerlo real** (segunda fase): conectar el envío a la API de Claude con las FAQ y los datos de la oficina como contexto. Hace falta un pequeño backend (en Vercel, una ruta `/api/chat`), así que no funcionaría en GitHub Pages.
+- **Para hacerlo real** (segunda fase): conectar el envío a la API de Claude con las FAQ y los datos de la oficina como contexto. Hace falta un pequeño backend (una ruta `/api/chat` en el Worker de `worker/`), así que no funcionaría en GitHub Pages.
 
 ## Mejoras opcionales (para una segunda fase con el cliente)
 

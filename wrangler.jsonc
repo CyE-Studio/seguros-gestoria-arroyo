@@ -1,53 +1,43 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "seguros-gestoria-arroyo",
-  "main": ".open-next/worker.js",
+  "main": "worker/index.ts",
   "compatibility_date": "2026-11-01",
-  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
-  "assets": {
-    "directory": ".open-next/assets",
-    "binding": "ASSETS"
-  },
   "observability": { "enabled": true },
+  // Sin direcciones de vista previa: cada versión subida no queda accesible por su cuenta.
+  "preview_urls": false,
 
-  // Variables públicas (no secretas). Los secretos van con `wrangler secret put`:
-  //   SANITY_REVALIDATE_SECRET
-  // Las NEXT_PUBLIC_* se incrustan en el build: deben estar también en el
-  // entorno al compilar (ver .github/workflows/cloudflare.yml).
-  "vars": {
-    "NEXT_PUBLIC_SANITY_DATASET": "production"
+  // La web: ficheros estáticos de `out/` (los genera `next build`). Cloudflare
+  // los sirve directamente, sin ejecutar el Worker, salvo en /panel y /api.
+  "assets": {
+    "directory": "out",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/panel", "/panel/*", "/api/*"]
   },
 
-  // Dominio propio: descomentar cuando el dominio esté en Cloudflare.
-  // "routes": [
-  //   { "pattern": "segurosgestoriarroyo.com", "custom_domain": true },
-  //   { "pattern": "www.segurosgestoriarroyo.com", "custom_domain": true }
-  // ],
-
-  "services": [
-    // Autorreferencia que usa OpenNext para la caché; debe coincidir con "name".
-    { "binding": "WORKER_SELF_REFERENCE", "service": "seguros-gestoria-arroyo" }
-  ],
-  "r2_buckets": [
-    // Crear antes del primer despliegue:
-    //   npx wrangler r2 bucket create seguros-gestoria-arroyo-cache
-    { "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "seguros-gestoria-arroyo-cache" }
-  ],
+  // Base de datos del panel: personas, campañas e imágenes.
+  // (El nombre "…-tags" viene del montaje anterior; la base estaba vacía.)
   "d1_databases": [
-    // Crear antes del primer despliegue y pegar aquí el database_id:
-    //   npx wrangler d1 create seguros-gestoria-arroyo-tags
     {
-      "binding": "NEXT_TAG_CACHE_D1",
+      "binding": "DB",
       "database_name": "seguros-gestoria-arroyo-tags",
-      "database_id": "6b51d59d-7de2-4269-bb4e-baf71ba126c5"
+      "database_id": "6b51d59d-7de2-4269-bb4e-baf71ba126c5",
+      "migrations_dir": "worker/migraciones"
     }
   ],
-  "durable_objects": {
-    "bindings": [{ "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }]
-  },
-  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["DOQueueHandler"] }],
-  "images": {
-    // Optimización de imágenes de next/image con Cloudflare Images.
-    "binding": "IMAGES"
-  }
+
+  // Cada hora: publica las campañas programadas que han llegado a su fecha.
+  "triggers": { "crons": ["5 * * * *"] }
+
+  // Secretos del Worker (DESPLIEGUE.md); se ponen con `npx wrangler secret put <NOMBRE>`:
+  //   DEPLOY_HOOK_URL   dirección del deploy hook que compila y publica la web
+  //   TOKEN_LECTURA     lo presenta la compilación para leer las campañas
+
+  // Dominio propio: descomentar cuando el dominio esté en Cloudflare. Añadir entonces
+  // también  "workers_dev": false  para que el panel solo exista en el dominio.
+  // ,"routes": [
+  //   { "pattern": "segurosgestoriaarroyo.com", "custom_domain": true }
+  // ]
 }

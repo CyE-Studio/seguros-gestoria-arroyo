@@ -23,14 +23,13 @@ export interface Intencion {
   acciones?: readonly AccionChat[];
 }
 
-const { telefono, whatsapp, direccion, horario, horarioVerano, mapfre } = NEGOCIO;
+const { telefono, whatsapp, direccion, horario, mapfre } = NEGOCIO;
 
 const ACCION_WHATSAPP: AccionChat = { etiqueta: "WhatsApp", href: whatsapp.href, tono: "whatsapp" };
 const ACCION_LLAMAR: AccionChat = { etiqueta: `Llamar ${telefono.visible}`, href: telefono.href, tono: "outline" };
 const ACCION_CITA: AccionChat = { etiqueta: "Pedir cita", href: "/contacto#cita", tono: "primary" };
 
 const horarioTexto = horario.map((h) => `• ${h.dias}: ${h.horas}`).join("\n");
-const veranoTexto = horarioVerano.map((h) => `• ${h.dias}: ${h.horas}`).join("\n");
 
 export const INTENCIONES: readonly Intencion[] = [
   {
@@ -42,7 +41,7 @@ export const INTENCIONES: readonly Intencion[] = [
   {
     id: "horario",
     claves: ["horario", "abierto", "abris", "abren", "cerrais", "cierran", "cierra", "a que hora", "hora"],
-    respuesta: `Nuestro horario habitual (septiembre a junio):\n${horarioTexto}\n\nEn verano:\n${veranoTexto}`,
+    respuesta: `Atendemos al público todo el año con el mismo horario:\n${horarioTexto}`,
     acciones: [{ etiqueta: "Ver contacto", href: "/contacto", tono: "outline" }],
   },
   {

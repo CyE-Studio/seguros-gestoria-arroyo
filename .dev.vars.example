@@ -1,0 +1,10 @@
+# Secretos del Worker para `npm run panel:dev`. Copia este fichero a .dev.vars
+# (no se guarda en git). En producción se ponen con `npx wrangler secret put`.
+
+# Lo presenta la compilación de la web para leer las campañas:
+#   PANEL_URL=http://localhost:8787 PANEL_TOKEN_LECTURA=<este valor> npm run contenido
+TOKEN_LECTURA=cualquier-valor-largo-para-pruebas-en-local
+
+# Deploy hook de Cloudflare que publica la web. En local se deja vacío: el
+# panel guarda igual y avisa de que no ha podido lanzar la publicación.
+DEPLOY_HOOK_URL=
