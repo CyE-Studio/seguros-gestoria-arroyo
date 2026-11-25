@@ -38,11 +38,11 @@ Cada publicación consume unos 2–3 minutos: caben alrededor de mil al mes.
 - [x] Clave de Anthropic puesta y asistente probado en real. Falta el tope de gasto mensual en
       la consola de Anthropic (sección «Asistente con IA»).
 - [x] Publicada en <https://segurosgestoriaarroyo.com> el 25/11/2026, indexable. La dirección
-      de pruebas `workers.dev` está apagada. Faltan el redireccionamiento de `www` y forzar
-      HTTPS (paso 5).
+      de pruebas `workers.dev` está apagada. `www` redirige al dominio. Falta forzar HTTPS (paso 5).
 - [x] Datos legales, email y horario del cliente en `src/lib/constants.ts`.
 - [x] Foto de la fachada (`public/fotos/fachada.jpg`). No hay más fotos ni reseñas con texto.
-- [ ] Search Console y estadísticas de visitas (paso 7).
+- [x] Aviso automático a Bing y otros buscadores (IndexNow) y contador de contactos en el panel.
+- [ ] Search Console (Google) y token de estadísticas de visitas (paso 7).
 - [ ] Invitar al cliente (paso 6) y alta en Google (paso 7).
 - [ ] Ajustes de seguridad en Cloudflare (sección «Seguridad»).
 
@@ -195,9 +195,8 @@ Está registrado en Cloudflare, así que los DNS ya están donde deben.
    `workers.dev` está apagada (`"workers_dev": false`).
 2. **Forzar HTTPS** (pendiente): *SSL/TLS → Edge Certificates → Always Use HTTPS*. Ahora
    mismo `http://` responde sin redirigir.
-3. Pendiente: `www` → dominio sin www: en Cloudflare, *Rules → Redirect Rules → Create rule*, plantilla
-   **Redirect from WWW to root**, y un registro DNS `www` (tipo `AAAA`, valor `100::`, con el
-   proxy activado) para que la regla pueda actuar.
+3. Hecho: `www` redirige al dominio sin www con un Worker mínimo aparte (`redireccion-www/`,
+   se publica con `npm run cf:www`; no hace falta volver a tocarlo).
 4. Al configurar la compilación (paso 3.5), `NEXT_PUBLIC_SITE_URL` y `PANEL_URL` son ya
    `https://segurosgestoriaarroyo.com`.
 
@@ -219,8 +218,15 @@ Cloudflare, en *Workers & Pages → seguros-gestoria-arroyo → Deployments*.
 Cloudflare: *Analytics & Logs → Web Analytics → Add a site* → `segurosgestoriaarroyo.com`.
 Copiar el **token** del fragmento que muestra (el valor de `"token"`) y ponerlo como variable
 de compilación `NEXT_PUBLIC_CF_ANALYTICS_TOKEN` (paso 3.5). La web ya está preparada: con el
-token carga el contador; sin él, no carga nada. Mide visitas, páginas y procedencia; no mide
-cuántas personas pulsan en WhatsApp o en llamar.
+token carga el contador; sin él, no carga nada. Mide visitas, páginas y procedencia.
+
+**Contactos.** Cuántas personas pulsan en WhatsApp, en llamar o en el correo, o envían el
+formulario de cita, se ve en el panel: **Contactos**. Es un recuento propio (`worker/contactos.ts`),
+sin cookies y sin guardar quién lo hace; lo ven tanto C&E como el cliente.
+
+**Bing y otros buscadores.** Cada publicación avisa por IndexNow de todas las páginas
+(`scripts/indexnow.mjs`); no hay que hacer nada. Google no usa IndexNow: para Google está
+Search Console, a continuación.
 
 1. **Search Console** (<https://search.google.com/search-console>): añadir la propiedad de tipo
    *Dominio* y verificarla con el registro TXT en el DNS de Cloudflare (o con la variable

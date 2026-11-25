@@ -4,6 +4,7 @@ import { AsistenteChat } from "@/components/chat/AsistenteChat";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { MobileCtaBar } from "@/components/layout/MobileCtaBar";
+import { RastreoContactos } from "@/components/ui/RastreoContactos";
 
 export default function SiteLayout({ children }: { children: ReactNode }) {
   return (
@@ -25,6 +26,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       <Footer />
       <MobileCtaBar />
       <AsistenteChat />
+      <RastreoContactos />
     </div>
   );
 }

@@ -35,6 +35,7 @@ el código, sin secretos. Ver [DESPLIEGUE.md](DESPLIEGUE.md).
 │   ├── seguridad.ts            # Invitaciones, contraseñas, sesiones, freno a la fuerza bruta
 │   ├── publicar.ts             # Lanza la compilación en Cloudflare (deploy hook) que publica la web
 │   ├── chat.ts                 # Asistente de la web con Claude (/api/chat) y sus límites de uso
+│   ├── contactos.ts            # Recuento de clics en WhatsApp, teléfono, correo y citas
 │   ├── vistas.ts · cliente.ts  # Pantallas (HTML) y su CSS/JS
 │   └── migraciones/            # Tablas de D1
 ├── scripts/

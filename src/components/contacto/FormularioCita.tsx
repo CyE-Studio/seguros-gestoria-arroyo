@@ -3,6 +3,7 @@
 import { type FormEvent, useState } from "react";
 
 import { Icon, WhatsAppIcon } from "@/components/ui/Icon";
+import { avisarContacto } from "@/components/ui/RastreoContactos";
 import { MOTIVOS_CITA, NEGOCIO } from "@/lib/constants";
 
 const WA_BASE = NEGOCIO.whatsapp.href.split("?")[0];
@@ -34,6 +35,7 @@ export function FormularioCita({ motivoInicial = MOTIVOS_CITA[0] }: FormularioCi
     ].filter(Boolean);
     const url = `${WA_BASE}?text=${encodeURIComponent(partes.join("\n"))}`;
     window.open(url, "_blank", "noopener,noreferrer");
+    avisarContacto("cita");
     setEnviado(true);
   }
 

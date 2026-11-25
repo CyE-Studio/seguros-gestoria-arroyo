@@ -123,7 +123,12 @@ async function superaLimites(env: Env, ip: string): Promise<boolean> {
 /** Limpieza de contadores antiguos (la llama la tarea horaria). */
 export async function limpiarCuotas(env: Env): Promise<void> {
   const anteayer = new Date(Date.now() - 2 * 86_400_000).toISOString().slice(0, 10);
-  await env.DB.prepare("DELETE FROM cuotas WHERE ventana < ?").bind(anteayer).run();
+  // El total diario de preguntas se conserva más tiempo: se enseña en el panel (Contactos).
+  const haceTresMeses = new Date(Date.now() - 100 * 86_400_000).toISOString().slice(0, 10);
+  await env.DB.batch([
+    env.DB.prepare("DELETE FROM cuotas WHERE ventana < ? AND clave <> 'total'").bind(anteayer),
+    env.DB.prepare("DELETE FROM cuotas WHERE ventana < ? AND clave = 'total'").bind(haceTresMeses),
+  ]);
 }
 
 /* ── Lo que sabe el asistente ─────────────────────────────────────────── */

@@ -80,7 +80,9 @@ export default function PrivacidadPage() {
       </p>
       <p>
         Para saber cuántas visitas recibe la web usamos Cloudflare Web Analytics, que elabora
-        estadísticas agregadas sin utilizar cookies ni identificar a los visitantes.
+        estadísticas agregadas sin utilizar cookies ni identificar a los visitantes. Con el mismo
+        fin contamos cuántas veces se pulsan los botones de contacto (WhatsApp, teléfono, correo y
+        formulario de cita), sin guardar quién lo hace ni ningún dato suyo.
       </p>
 
       <h2>8. Asistente virtual</h2>

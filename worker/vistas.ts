@@ -1,3 +1,4 @@
+import { TIPOS_CONTACTO, type ResumenContactos, type TipoContacto } from "./contactos";
 import { CATEGORIAS, LIMITES, type Campana, type Usuario } from "./tipos";
 
 /** Pantallas del panel: HTML generado en el Worker, sin framework. */
@@ -28,6 +29,7 @@ function pagina(contenido: string, { titulo, usuario, ruta, estrecha }: Opciones
   const menu = usuario
     ? `<nav aria-label="Panel">
         ${enlace("/panel", "Campañas")}
+        ${enlace("/panel/contactos", "Contactos")}
         ${usuario.rol === "admin" ? enlace("/panel/usuarios", "Personas") : ""}
         <a href="/" target="_blank" rel="noopener">Ver la web</a>
         <form method="post" action="/panel/salir"><button class="boton enlace" type="submit">Salir (${esc(usuario.nombre)})</button></form>
@@ -375,5 +377,56 @@ export function vistaEnlace(usuario: Usuario, destinatario: Usuario, enlace: str
       </div>
     </div>`,
     { titulo: "Invitación", usuario, ruta: "/panel/usuarios" },
+  );
+}
+
+/* ── Contactos ────────────────────────────────────────────────────────── */
+
+const NOMBRE_TIPO: Record<TipoContacto, string> = {
+  whatsapp: "WhatsApp",
+  llamada: "Llamadas",
+  cita: "Citas (formulario)",
+  correo: "Correo",
+};
+
+const fechaLarga = (dia: string): string =>
+  new Intl.DateTimeFormat("es-ES", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).format(
+    new Date(`${dia}T12:00:00Z`),
+  );
+
+export function vistaContactos(usuario: Usuario, r: ResumenContactos): string {
+  const cabeceraTipos = TIPOS_CONTACTO.map((t) => `<th>${NOMBRE_TIPO[t]}</th>`).join("");
+  const celdas = (porTipo: Record<TipoContacto, number>) => TIPOS_CONTACTO.map((t) => `<td>${porTipo[t]}</td>`).join("");
+
+  const periodos = r.periodos
+    .map((p) => `<tr><td class="titulo">${esc(p.nombre)}</td>${celdas(p.porTipo)}<td><strong>${p.total}</strong></td></tr>`)
+    .join("");
+  const dias = r.dias
+    .map((d) => `<tr><td class="titulo">${esc(fechaLarga(d.dia))}</td>${celdas(d.porTipo)}<td><strong>${d.total}</strong></td></tr>`)
+    .join("");
+  const paginas = r.paginas
+    .map((p) => `<tr><td class="titulo"><a href="${esc(p.pagina)}" target="_blank" rel="noopener">${esc(p.pagina === "/" ? "Portada" : p.pagina)}</a></td><td><strong>${p.total}</strong></td></tr>`)
+    .join("");
+
+  return pagina(
+    `<h1>Contactos desde la web</h1>
+    <p class="suave">Cuántas veces se ha pulsado en WhatsApp, en llamar o en el correo, y cuántas se ha enviado el formulario de cita. Es un recuento: no se guarda quién lo hace. Un clic no siempre acaba en mensaje o en llamada, pero indica si la web trae gente a la oficina.</p>
+    <div class="tarjeta"><div class="tabla"><table>
+      <thead><tr><th>Periodo</th>${cabeceraTipos}<th>Total</th></tr></thead>
+      <tbody>${periodos}</tbody>
+    </table></div></div>
+    <div class="tarjeta">
+      <h2>Asistente con IA</h2>
+      <p>${r.preguntasAlAsistente} preguntas al asistente en los últimos 30 días.</p>
+    </div>
+    <div class="tarjeta">
+      <h2>Desde qué páginas se contacta (últimos 30 días)</h2>
+      ${paginas ? `<div class="tabla"><table><thead><tr><th>Página</th><th>Contactos</th></tr></thead><tbody>${paginas}</tbody></table></div>` : "<p>Todavía no hay contactos registrados.</p>"}
+    </div>
+    <div class="tarjeta">
+      <h2>Día a día (últimos 30 días)</h2>
+      ${dias ? `<div class="tabla"><table><thead><tr><th>Día</th>${cabeceraTipos}<th>Total</th></tr></thead><tbody>${dias}</tbody></table></div>` : "<p>Todavía no hay contactos registrados.</p>"}
+    </div>`,
+    { titulo: "Contactos", usuario, ruta: "/panel/contactos" },
   );
 }

@@ -7,6 +7,7 @@
  *
  *   /panel/…                 panel privado: campañas y personas con acceso
  *   /api/chat                asistente de la web (Claude), con límites de uso
+ *   /api/contacto            recuento de clics de contacto (se ve en /panel/contactos)
  *   /api/publico/campanas    campañas publicadas, en JSON (las lee la compilación,
  *   /api/publico/imagen/…    con el secreto TOKEN_LECTURA) y sus imágenes
  *
@@ -15,6 +16,7 @@
  */
 import { chat, limpiarCuotas } from "./chat";
 import { CSS, JS } from "./cliente";
+import { limpiarContactos, registrarContacto, resumenContactos } from "./contactos";
 import { lanzarPublicacion, publicarProgramadas } from "./publicar";
 import { html, imagen, json, recurso, redirigir } from "./respuestas";
 import {
@@ -40,6 +42,7 @@ import {
   vistaAlta,
   vistaCampana,
   vistaCampanas,
+  vistaContactos,
   vistaEnlace,
   vistaEntrar,
   vistaMensaje,
@@ -461,6 +464,8 @@ async function panel(req: Request, env: Env, url: URL): Promise<Response> {
     return html(vistaCampanas(usuario, await listarCampanas(env), url.searchParams.get("aviso") ?? ""));
   }
 
+  if (ruta === "/panel/contactos" && !esPost) return html(vistaContactos(usuario, await resumenContactos(env)));
+
   if (ruta === "/panel/campanas/nueva") {
     if (esPost) return guardarCampana(req, env, usuario, null);
     return html(
@@ -534,6 +539,8 @@ export default {
 
       // Asistente de la web: público, con sus propios límites (worker/chat.ts).
       if (url.pathname === "/api/chat") return await chat(req, env);
+      // Recuento de clics en WhatsApp, teléfono, correo y citas (worker/contactos.ts).
+      if (url.pathname === "/api/contacto") return await registrarContacto(req, env);
 
       if (url.pathname.startsWith("/api/")) {
         if (req.method !== "GET" && req.method !== "HEAD") return json({ error: "Método no permitido" }, 405);
@@ -557,6 +564,6 @@ export default {
   },
 
   async scheduled(_evento: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
-    ctx.waitUntil(Promise.all([publicarProgramadas(env), limpiarCaducados(env), limpiarCuotas(env)]));
+    ctx.waitUntil(Promise.all([publicarProgramadas(env), limpiarCaducados(env), limpiarCuotas(env), limpiarContactos(env)]));
   },
 } satisfies ExportedHandler<Env>;
