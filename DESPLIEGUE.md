@@ -33,8 +33,11 @@ Cada publicación consume unos 2–3 minutos: caben alrededor de mil al mes.
 - [x] Primera persona con acceso (paso 2): invitación de administrador creada.
 - [x] Secreto `TOKEN_LECTURA` puesto en el Worker. Su valor está en `.env.despliegue.local`
       (fuera de git) para copiarlo como secreto de compilación en el paso 3.5.
-- [ ] Compilación en Cloudflare conectada al repositorio (paso 3).
-- [ ] Publicación automática desde el panel (paso 4).
+- [x] Compilación en Cloudflare conectada al repositorio `CyE-Studio/seguros-gestoria-arroyo`,
+      rama `main` (paso 3). Usa el token que Cloudflare genera solo.
+- [x] Publicación automática desde el panel (paso 4), probada el 25/11/2026 con un navegador
+      real: publicar, editar y eliminar actualizan la web en dos o tres minutos, y el reintento
+      automático recoge los cambios que una compilación no llegó a leer.
 - [x] Clave de Anthropic puesta y asistente probado en real. Falta el tope de gasto mensual en
       la consola de Anthropic (sección «Asistente con IA»).
 - [x] Publicada en <https://segurosgestoriaarroyo.com> el 25/11/2026, indexable. La dirección
@@ -51,11 +54,13 @@ Comprobado en real: la web, el panel y las dos API responden; la entrada al pane
 
 Pendiente de comprobar en real:
 
-- Que el token de compilación necesita permiso de D1 (paso 3.3). Es una deducción a partir de
-  la lista de permisos del token por defecto, que no lo incluye.
-- Que Workers Builds instala las dependencias por su cuenta antes del comando de compilación.
-  Si la primera compilación fallara porque no encuentra `next`, se antepone
-  `npm ci --ignore-scripts && ` al comando de compilación.
+- Nada de la cadena de publicación: está comprobada. Workers Builds instala las dependencias
+  por su cuenta y el token automático basta para desplegar.
+
+**Importante desde que la compilación está conectada:** lo que publica Cloudflare es lo que
+hay en `main` en GitHub. Un despliegue hecho a mano desde un equipo (`npx wrangler deploy`)
+dura hasta la siguiente campaña publicada, que vuelve a poner lo de GitHub. Todo cambio de
+código tiene que subirse a GitHub.
 
 `npm run comprobar` dice qué falta. Al compilar para el dominio definitivo, la compilación se
 detiene si quedan datos legales sin rellenar.
@@ -97,20 +102,21 @@ como administrador. El mismo comando sirve para recuperar el acceso si olvidas l
    «Cloudflare Workers & Pages» en la organización CyE-Studio, dando acceso **solo a este
    repositorio** («Only select repositories»). Rama de producción: `main`.
 
-3. **Token de compilación.** En vez del que Cloudflare crea por defecto (no incluye D1), crear
-   uno propio en *My Profile → API Tokens*: plantilla **Edit Cloudflare Workers** más el
-   permiso **D1: Edit**, limitado a esta cuenta. Elegirlo en *Builds → API token*.
+3. **Token de compilación.** Vale el que Cloudflare crea solo (*Create new token*).
 
 4. **Comandos:**
 
    | Campo | Valor |
    |---|---|
    | Build command | `npm run cf:build` |
-   | Deploy command | `npm run cf:publicar` |
+   | Deploy command | `npx wrangler deploy && node scripts/indexnow.mjs` |
    | Root directory | `/` |
 
-   `cf:build` comprueba, trae las campañas del panel y compila la web; `cf:publicar` aplica
-   las migraciones de D1 y despliega. La versión de Node la fija el fichero `.node-version`.
+   `cf:build` comprueba, trae las campañas del panel y compila la web; el comando de
+   despliegue sube el Worker y avisa a los buscadores. **Las migraciones de D1 no se aplican
+   en la compilación** (el token automático no tiene permiso sobre D1): cuando se añada una
+   en `worker/migraciones/`, hay que aplicarla a mano con
+   `npx wrangler d1 migrations apply DB --remote` ANTES de subir el código que la usa. La versión de Node la fija el fichero `.node-version`.
    Desactivar las compilaciones de ramas que no sean `main` (*Builds → Branch control*): las
    vistas previas están apagadas a propósito.
 
@@ -208,8 +214,9 @@ escrito. El cliente abre el enlace, elige su contraseña y desde entonces entra 
 `https://<dominio>/panel` con su correo.
 
 Qué puede hacer: crear campañas con imagen, guardarlas como borrador, publicarlas, programarlas
-con una fecha futura (aparecen solas, con hasta una hora de margen) y retirarlas. Cada
-publicación tarda unos dos minutos en verse en la web. El estado de cada compilación se ve en
+con una fecha futura (aparecen solas, con unos minutos de margen) y retirarlas. Cada
+publicación tarda dos o tres minutos en verse en la web, y hasta diez si se publican varias
+seguidas: el panel revisa cada 5 minutos si queda algún cambio sin recoger y lo relanza. El estado de cada compilación se ve en
 Cloudflare, en *Workers & Pages → seguros-gestoria-arroyo → Deployments*.
 
 ## 7. Google y estadísticas
