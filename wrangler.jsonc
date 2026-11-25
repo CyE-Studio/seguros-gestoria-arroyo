@@ -29,11 +29,20 @@
   ],
 
   // Cada hora: publica las campañas programadas que han llegado a su fecha.
-  "triggers": { "crons": ["5 * * * *"] }
+  "triggers": { "crons": ["5 * * * *"] },
+
+  // Asistente de la web (worker/chat.ts). El modelo se puede cambiar aquí sin tocar código:
+  // "claude-opus-5-5" (el más capaz), "claude-sonnet-5-5" o "claude-haiku-5-5" (el más barato).
+  // LIMITE_CHAT_DIARIO es el tope de mensajes al día entre todos los visitantes.
+  "vars": {
+    "MODELO_CHAT": "claude-opus-5-5",
+    "LIMITE_CHAT_DIARIO": "300"
+  }
 
   // Secretos del Worker (DESPLIEGUE.md); se ponen con `npx wrangler secret put <NOMBRE>`:
-  //   DEPLOY_HOOK_URL   dirección del deploy hook que compila y publica la web
-  //   TOKEN_LECTURA     lo presenta la compilación para leer las campañas
+  //   DEPLOY_HOOK_URL     dirección del deploy hook que compila y publica la web
+  //   TOKEN_LECTURA       lo presenta la compilación para leer las campañas
+  //   ANTHROPIC_API_KEY   clave de la API de Anthropic para el asistente de la web
 
   // Dominio propio: descomentar cuando el dominio esté en Cloudflare. Añadir entonces
   // también  "workers_dev": false  para que el panel solo exista en el dominio.

@@ -1,12 +1,13 @@
 import { NEGOCIO } from "./constants";
 
 /**
- * Base de conocimiento del asistente de demostración.
+ * Respuestas predefinidas del asistente.
  *
- * NO es inteligencia artificial real: cada "intención" tiene palabras clave y
- * una respuesta fija. Sirve para enseñar al cliente la experiencia de un
- * asistente que resuelve dudas frecuentes sin llamar a la oficina. Conectarlo
- * a un modelo (p. ej. la API de Claude) es el siguiente paso (ver PLAN-DEMO.md).
+ * Cada "intención" tiene palabras clave y una respuesta fija. Se usan en dos
+ * sitios: son lo que contesta el chat cuando la IA no está disponible (sin
+ * clave, límite de uso alcanzado, fallo de red, demo sin servidor) y lo que
+ * contestan al instante las preguntas sugeridas; además, forman parte de lo
+ * que la IA sabe de la oficina (src/lib/contexto-asistente.ts).
  */
 
 export interface AccionChat {
@@ -136,7 +137,7 @@ export const INTENCIONES: readonly Intencion[] = [
     id: "promociones",
     claves: ["promocion", "descuento", "oferta", "campana", "rebaja", "novedad"],
     respuesta:
-      "Publicamos las promociones activas de MAPFRE y los avisos de la gestoría en la sección de campañas. Ahora mismo hay descuentos en coche, hogar y salud. Te los aplicamos directamente en el presupuesto.",
+      "Publicamos las promociones activas de MAPFRE y los avisos de la gestoría en la sección de campañas. Las que estén vigentes te las aplicamos directamente en el presupuesto.",
     acciones: [{ etiqueta: "Ver campañas", href: "/campanas", tono: "primary" }],
   },
   {

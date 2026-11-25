@@ -11,6 +11,12 @@ export interface Env {
    * configurado, la API no responde a nadie.
    */
   TOKEN_LECTURA?: string;
+  /** Secreto: clave de la API de Anthropic para el asistente de la web. Sin ella, el chat usa sus respuestas predefinidas. */
+  ANTHROPIC_API_KEY?: string;
+  /** Modelo de Claude que responde en el chat. */
+  MODELO_CHAT?: string;
+  /** Mensajes del chat que se atienden al día entre todos los visitantes (tope de gasto). */
+  LIMITE_CHAT_DIARIO?: string;
 }
 
 export type Rol = "admin" | "editor";

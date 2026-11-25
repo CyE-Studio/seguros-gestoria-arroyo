@@ -21,6 +21,7 @@ Visitante → dominio → ficheros estáticos (el Worker ni se ejecuta)
 | Base de datos (D1) | Gratis | 5 GB |
 | Compilación (Workers Builds) | Gratis | 3 000 minutos al mes, una compilación a la vez |
 | Dominio | **De pago** (≈ 10 €/año) | Lo contrata el cliente; no hay forma de evitarlo |
+| Asistente con IA (Anthropic) | **De pago por uso** | Sin cuota fija: se paga cada respuesta. Ver «Asistente con IA» |
 
 Cada publicación consume unos 2–3 minutos: caben alrededor de mil al mes.
 
@@ -32,6 +33,7 @@ Cada publicación consume unos 2–3 minutos: caben alrededor de mil al mes.
 - [ ] Primera persona con acceso (paso 2).
 - [ ] Compilación en Cloudflare conectada al repositorio (paso 3).
 - [ ] Publicación automática desde el panel (paso 4).
+- [ ] Clave de Anthropic para el asistente y tope de gasto (sección «Asistente con IA»).
 - [ ] Dominio `segurosgestoriaarroyo.com` conectado (paso 5). Ya está comprado, en Cloudflare.
 - [x] Datos legales, email y horario del cliente en `src/lib/constants.ts`.
 - [ ] Fotos de la oficina y reseñas reales (pendientes; ver `npm run comprobar`).
@@ -136,6 +138,49 @@ minuto), no cambiar nada; aun así es un secreto: si se filtra, se borra el hook
 otro. Mientras no esté configurada, el panel guarda las campañas y avisa de que no ha podido
 publicar.
 
+## Asistente con IA
+
+El chat de la web responde con Claude (API de Anthropic) a las preguntas escritas. Las
+preguntas sugeridas, y cualquier pregunta cuando la IA no está disponible, se contestan con
+las respuestas predefinidas de `src/lib/asistente.ts`, así que el chat nunca se queda mudo.
+
+1. Guardar la clave como secreto del Worker (no va en el código ni en GitHub):
+
+   ```powershell
+   npx wrangler secret put ANTHROPIC_API_KEY
+   ```
+
+2. **Poner un tope de gasto mensual** en la consola de Anthropic (*Settings → Limits*), y a ser
+   posible usar una clave creada solo para esta web, en su propio *workspace*. Es la red de
+   seguridad definitiva: pase lo que pase, no se gasta más de eso.
+
+Qué sabe: lo que dice la web. Al compilar se genera `/asistente-contexto.json` con los datos
+de contacto, el horario, los servicios, las preguntas frecuentes y las campañas publicadas
+(`src/lib/contexto-asistente.ts`). Si cambia la web, cambia lo que sabe el asistente.
+
+Cuánto cuesta (estimación, sin medir en real): cada respuesta envía unas 3 500 palabras-token
+de contexto y recibe una respuesta corta.
+
+| Modelo (`MODELO_CHAT` en `wrangler.jsonc`) | Por respuesta | Con el tope de 300 al día |
+|---|---|---|
+| `claude-opus-5-5` (el configurado) | 1–3 céntimos | hasta unos 6–9 € en un día de uso máximo |
+| `claude-sonnet-5-5` | alrededor de 1 céntimo | hasta unos 3 € |
+| `claude-haiku-5-5` | menos de 0,1 céntimos | unos céntimos |
+
+Para preguntas de mostrador (horario, papeles, cómo dar un parte), Haiku suele bastar; se
+cambia en `wrangler.jsonc` sin tocar código. `LIMITE_CHAT_DIARIO` es el tope de mensajes al
+día entre todos los visitantes; además hay 10 mensajes cada 10 minutos y 40 al día por
+conexión.
+
+Protecciones del chat (`worker/chat.ts`): solo acepta peticiones de la propia web, de menos
+de 12 KB y con forma válida; no guarda ni registra las conversaciones; el modelo solo responde
+sobre la oficina y deriva a WhatsApp o teléfono lo que no sabe; la respuesta se muestra como
+texto plano. La política de privacidad ya recoge que los mensajes se envían a Anthropic.
+
+Pendiente de probar con una clave real: en local se han probado todas las protecciones y que
+la petición llega a Anthropic, pero no una respuesta de verdad. Tras poner la clave, conviene
+hacerle una docena de preguntas (incluidas algunas fuera de tema) antes de darlo por bueno.
+
 ## 5. Dominio
 
 El dominio es **segurosgestoriaarroyo.com** y su titular es el cliente (cláusula 10 del contrato).
@@ -182,6 +227,7 @@ Dónde está cada secreto (ninguno en GitHub ni en el código):
 | `TOKEN_LECTURA` / `PANEL_TOKEN_LECTURA` | Worker y compilación | Leer las campañas ya publicadas, que son públicas |
 | `DEPLOY_HOOK_URL` | Worker | Lanzar compilaciones (10 por minuto como mucho) |
 | Token de compilación | Cloudflare | Desplegar este Worker y tocar su base de datos |
+| `ANTHROPIC_API_KEY` | Worker | Gastar saldo de la cuenta de Anthropic, hasta el tope mensual que se haya puesto |
 
 Lo que ya hace el código:
 
@@ -193,6 +239,8 @@ Lo que ya hace el código:
   3 MB por envío; política de contenido estricta (sin código en línea).
 - **Texto de las campañas:** no admite HTML; solo enlaces `https`, `mailto`, `tel` o internos.
 - **Lectura de campañas:** con secreto; lo recibido se valida al compilar.
+- **Asistente con IA:** límites por conexión y diario, sin registro de conversaciones y con
+  respuestas predefinidas de respaldo (sección «Asistente con IA»).
 - **Repositorio:** el único workflow que queda (la demo de GitHub Pages) no usa secretos, lleva
   las acciones fijadas por commit y permisos mínimos; Dependabot avisa de dependencias con
   fallos.

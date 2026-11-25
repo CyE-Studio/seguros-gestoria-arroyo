@@ -17,6 +17,10 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
 
+# Lo lee el asistente (worker/chat.ts); no es una página.
+/asistente-contexto.json
+  X-Robots-Tag: noindex
+
 # Ficheros con huella en el nombre: no cambian nunca.
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable

@@ -11,7 +11,7 @@ import {
   resolverIntencion,
   SUGERENCIAS,
 } from "@/lib/asistente";
-import { NEGOCIO } from "@/lib/constants";
+import { BASE_PATH, NEGOCIO } from "@/lib/constants";
 
 interface Mensaje {
   id: number;
@@ -29,11 +29,54 @@ const TONOS: Record<NonNullable<AccionChat["tono"]>, string> = {
 let contadorId = 0;
 const nuevoId = () => ++contadorId;
 
+/** Botones que acompañan a las respuestas de la IA: siempre hay una persona a un toque. */
+const ACCIONES_IA: readonly AccionChat[] = [
+  { etiqueta: "WhatsApp", href: NEGOCIO.whatsapp.href, tono: "whatsapp" },
+  { etiqueta: `Llamar ${NEGOCIO.telefono.visible}`, href: NEGOCIO.telefono.href, tono: "outline" },
+  { etiqueta: "Pedir cita", href: "/contacto#cita", tono: "outline" },
+];
+
+/** Debe coincidir con el tope del servidor (worker/chat.ts). */
+const MAX_CARACTERES = 500;
+
+type ResultadoIA = { texto: string } | { fallo: "no-disponible" | "temporal" };
+
 /**
- * Asistente de chat de DEMOSTRACIÓN. No llama a ninguna IA: responde con la
- * base de conocimiento de `lib/asistente.ts` simulando un pequeño retardo de
- * escritura. Enseña al cliente cómo sería resolver dudas sin llamar a la
- * oficina. Se abre automáticamente si la URL lleva `#asistente`.
+ * Pide la respuesta a la IA (POST /api/chat, en el Worker). Si no hay
+ * servidor, no está configurada, se ha alcanzado un límite o falla la red,
+ * devuelve un fallo y el chat contesta con las respuestas predefinidas.
+ */
+async function preguntarALaIA(historial: readonly Mensaje[]): Promise<ResultadoIA> {
+  const control = new AbortController();
+  const limite = window.setTimeout(() => control.abort(), 30_000);
+  try {
+    const respuesta = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        mensajes: historial.slice(-10).map((m) => ({ rol: m.rol, texto: m.texto })),
+      }),
+      signal: control.signal,
+    });
+    // 404/405: no hay servidor (desarrollo). 503: la IA no está configurada.
+    if ([404, 405, 503].includes(respuesta.status)) return { fallo: "no-disponible" };
+    if (!respuesta.ok) return { fallo: "temporal" };
+    const datos: unknown = await respuesta.json();
+    const texto = (datos as { respuesta?: unknown } | null)?.respuesta;
+    return typeof texto === "string" && texto.trim() ? { texto: texto.trim() } : { fallo: "temporal" };
+  } catch {
+    return { fallo: "temporal" };
+  } finally {
+    window.clearTimeout(limite);
+  }
+}
+
+/**
+ * Asistente de chat. Las preguntas escritas las responde la IA (Claude, a
+ * través de /api/chat). Las preguntas sugeridas, y cualquier pregunta cuando
+ * la IA no está disponible, se contestan con las respuestas predefinidas de
+ * `lib/asistente.ts`. Todo se pinta como texto, nunca como HTML.
+ * Se abre automáticamente si la URL lleva `#asistente`.
  */
 export function AsistenteChat() {
   const [abierto, setAbierto] = useState(false);
@@ -47,6 +90,9 @@ export function AsistenteChat() {
   const listaRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const temporizador = useRef<number | null>(null);
+  const montado = useRef(true);
+  // En la demo de GitHub Pages no hay servidor: ni se intenta.
+  const iaDisponible = useRef(BASE_PATH === "");
 
   const abrir = useCallback(() => {
     setAbierto(true);
@@ -81,19 +127,17 @@ export function AsistenteChat() {
     if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
   }, [mensajes, escribiendo]);
 
-  useEffect(() => () => {
-    if (temporizador.current) window.clearTimeout(temporizador.current);
+  useEffect(() => {
+    montado.current = true;
+    return () => {
+      montado.current = false;
+      if (temporizador.current) window.clearTimeout(temporizador.current);
+    };
   }, []);
 
-  function responder(texto: string, intencionId?: string) {
-    const limpio = texto.trim();
-    if (!limpio || escribiendo) return;
-    setMensajes((m) => [...m, { id: nuevoId(), rol: "usuario", texto: limpio }]);
-    setEntrada("");
-    setEscribiendo(true);
-    if (intencionId) setUsadas((u) => [...u, intencionId]);
-
-    const intencion = resolverIntencion(limpio, intencionId);
+  /** Respuesta predefinida, con un pequeño retardo para que no resulte brusca. */
+  function responderConPredefinida(texto: string, intencionId?: string) {
+    const intencion = resolverIntencion(texto, intencionId);
     const respuesta = intencion ?? RESPUESTA_FALLBACK;
     const retardo = 600 + Math.min(1200, respuesta.respuesta.length * 6);
 
@@ -104,6 +148,36 @@ export function AsistenteChat() {
       ]);
       setEscribiendo(false);
     }, retardo);
+  }
+
+  function responder(texto: string, intencionId?: string) {
+    const limpio = texto.trim().slice(0, MAX_CARACTERES);
+    if (!limpio || escribiendo) return;
+    const historial: Mensaje[] = [...mensajes, { id: nuevoId(), rol: "usuario", texto: limpio }];
+    setMensajes(historial);
+    setEntrada("");
+    setEscribiendo(true);
+    if (intencionId) setUsadas((u) => [...u, intencionId]);
+
+    // Las preguntas sugeridas tienen respuesta fija: es instantánea y no gasta IA.
+    if (intencionId || !iaDisponible.current) {
+      responderConPredefinida(limpio, intencionId);
+      return;
+    }
+
+    void preguntarALaIA(historial).then((resultado) => {
+      if (!montado.current) return;
+      if ("texto" in resultado) {
+        setMensajes((m) => [
+          ...m,
+          { id: nuevoId(), rol: "asistente", texto: resultado.texto, acciones: ACCIONES_IA },
+        ]);
+        setEscribiendo(false);
+        return;
+      }
+      if (resultado.fallo === "no-disponible") iaDisponible.current = false;
+      responderConPredefinida(limpio);
+    });
   }
 
   function enviar(e: FormEvent<HTMLFormElement>) {
@@ -282,6 +356,7 @@ export function AsistenteChat() {
               onChange={(e) => setEntrada(e.target.value)}
               placeholder="Escribe tu pregunta…"
               aria-label="Escribe tu pregunta"
+              maxLength={MAX_CARACTERES}
               className="h-11 flex-1 rounded-xl border border-slate-300 bg-white px-4 text-[15px] text-slate-900 placeholder:text-slate-400 focus:border-brand-500"
             />
             <button
@@ -294,7 +369,8 @@ export function AsistenteChat() {
             </button>
           </div>
           <p className="mt-2 text-center text-[11px] text-slate-400">
-            Asistente automático con respuestas predefinidas · Para hablar con una persona:{" "}
+            Asistente con inteligencia artificial: puede equivocarse. No escribas datos
+            personales. Para hablar con una persona:{" "}
             <a href={NEGOCIO.whatsapp.href} target="_blank" rel="noopener noreferrer" className="font-semibold text-slate-600">
               WhatsApp
             </a>

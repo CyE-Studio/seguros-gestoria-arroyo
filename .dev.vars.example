@@ -5,6 +5,10 @@
 #   PANEL_URL=http://localhost:8787 PANEL_TOKEN_LECTURA=<este valor> npm run contenido
 TOKEN_LECTURA=cualquier-valor-largo-para-pruebas-en-local
 
+# Clave de la API de Anthropic para el asistente de la web. Vacía: el chat usa
+# solo las respuestas predefinidas. Con una clave real, cada mensaje cuesta dinero.
+ANTHROPIC_API_KEY=
+
 # Deploy hook de Cloudflare que publica la web. En local se deja vacío: el
 # panel guarda igual y avisa de que no ha podido lanzar la publicación.
 DEPLOY_HOOK_URL=

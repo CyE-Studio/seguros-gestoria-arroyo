@@ -6,12 +6,14 @@
  * wrangler.jsonc):
  *
  *   /panel/…                 panel privado: campañas y personas con acceso
+ *   /api/chat                asistente de la web (Claude), con límites de uso
  *   /api/publico/campanas    campañas publicadas, en JSON (las lee la compilación,
  *   /api/publico/imagen/…    con el secreto TOKEN_LECTURA) y sus imágenes
  *
  * Además, cada hora comprueba si alguna campaña programada ha llegado a su
  * fecha y, si es así, lanza una publicación.
  */
+import { chat, limpiarCuotas } from "./chat";
 import { CSS, JS } from "./cliente";
 import { lanzarPublicacion, publicarProgramadas } from "./publicar";
 import { html, imagen, json, recurso, redirigir } from "./respuestas";
@@ -530,6 +532,9 @@ export default {
     try {
       if (url.pathname === "/panel" || url.pathname.startsWith("/panel/")) return await panel(req, env, url);
 
+      // Asistente de la web: público, con sus propios límites (worker/chat.ts).
+      if (url.pathname === "/api/chat") return await chat(req, env);
+
       if (url.pathname.startsWith("/api/")) {
         if (req.method !== "GET" && req.method !== "HEAD") return json({ error: "Método no permitido" }, 405);
         // Solo la compilación de la web lee la API, y lo hace con un secreto.
@@ -552,6 +557,6 @@ export default {
   },
 
   async scheduled(_evento: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
-    ctx.waitUntil(Promise.all([publicarProgramadas(env), limpiarCaducados(env)]));
+    ctx.waitUntil(Promise.all([publicarProgramadas(env), limpiarCaducados(env), limpiarCuotas(env)]));
   },
 } satisfies ExportedHandler<Env>;

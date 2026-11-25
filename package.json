@@ -16,6 +16,7 @@
     "cf:deploy:inicial": "node scripts/comprobar-produccion.mjs && node scripts/traer-campanas.mjs --vacio && next build && npm run cf:publicar"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.14.0",
     "next": "^15.5.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

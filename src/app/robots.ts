@@ -14,7 +14,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/panel", "/api"],
+      disallow: ["/panel", "/api", "/asistente-contexto.json"],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };

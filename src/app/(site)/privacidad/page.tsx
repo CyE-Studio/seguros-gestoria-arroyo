@@ -78,6 +78,21 @@ export default function PrivacidadPage() {
         interactivo&rdquo;; a partir de ese momento se aplican las condiciones de Google. Las
         fuentes tipográficas se sirven desde nuestro propio dominio, sin conexión a terceros.
       </p>
+
+      <h2>8. Asistente virtual</h2>
+      <p>
+        El asistente de la web responde con inteligencia artificial. Lo que escribes en él se envía
+        a Anthropic, PBC (Estados Unidos), proveedor del modelo Claude, con el único fin de generar
+        la respuesta. Nosotros no guardamos las conversaciones: solo se mantienen en tu navegador
+        mientras tienes la página abierta. Para evitar abusos se cuenta el número de mensajes por
+        conexión, sin almacenar tu dirección IP ni el contenido de los mensajes.
+      </p>
+      <p>
+        El asistente ofrece información general y puede cometer errores; no sustituye al
+        asesoramiento de la oficina. No escribas en él datos personales (DNI, matrículas, números
+        de póliza, datos bancarios o de salud): para cualquier gestión, utiliza el teléfono,
+        WhatsApp o ven a la oficina.
+      </p>
     </PaginaLegal>
   );
 }
