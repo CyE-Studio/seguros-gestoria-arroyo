@@ -29,8 +29,11 @@ Cada publicación consume unos 2–3 minutos: caben alrededor de mil al mes.
 
 - [x] Web estática y panel hechos y probados en local.
 - [x] Base de datos D1 creada (su id está en `wrangler.jsonc`).
-- [ ] Primer despliegue (paso 1).
-- [ ] Primera persona con acceso (paso 2).
+- [x] Primer despliegue (paso 1), hecho el 25/11/2026 en
+      <https://seguros-gestoria-arroyo.enriquemadruga57.workers.dev> (dirección de pruebas, sin indexar).
+- [x] Primera persona con acceso (paso 2): invitación de administrador creada.
+- [x] Secreto `TOKEN_LECTURA` puesto en el Worker. Su valor está en `.env.despliegue.local`
+      (fuera de git) para copiarlo como secreto de compilación en el paso 3.5.
 - [ ] Compilación en Cloudflare conectada al repositorio (paso 3).
 - [ ] Publicación automática desde el panel (paso 4).
 - [ ] Clave de Anthropic para el asistente y tope de gasto (sección «Asistente con IA»).
@@ -40,12 +43,11 @@ Cada publicación consume unos 2–3 minutos: caben alrededor de mil al mes.
 - [ ] Invitar al cliente (paso 6) y alta en Google (paso 7).
 - [ ] Ajustes de seguridad en Cloudflare (sección «Seguridad»).
 
-Pendiente de comprobar en real (no se ha podido probar sin sesión en Cloudflare):
+Comprobado en real: la web, el panel y las dos API responden; la entrada al panel (PBKDF2 a
+100 000 iteraciones) no supera el límite de CPU del plan gratuito.
 
-- Que entrar al panel no supera el límite de CPU del plan gratuito (10 ms por petición). La
-  contraseña se comprueba con PBKDF2 a 100 000 iteraciones; si Cloudflare devolviera el error
-  1102 al entrar, se baja `ITERACIONES` en `worker/seguridad.ts` (las contraseñas existentes
-  siguen valiendo).
+Pendiente de comprobar en real:
+
 - Que el token de compilación necesita permiso de D1 (paso 3.3). Es una deducción a partir de
   la lista de permisos del token por defecto, que no lo incluye.
 - Que Workers Builds instala las dependencias por su cuenta antes del comando de compilación.
