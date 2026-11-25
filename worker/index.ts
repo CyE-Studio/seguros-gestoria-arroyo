@@ -11,13 +11,13 @@
  *   /api/publico/campanas    campañas publicadas, en JSON (las lee la compilación,
  *   /api/publico/imagen/…    con el secreto TOKEN_LECTURA) y sus imágenes
  *
- * Además, cada hora comprueba si alguna campaña programada ha llegado a su
- * fecha y, si es así, lanza una publicación.
+ * Además, cada 5 minutos comprueba si queda algún cambio sin publicar o si una
+ * campaña programada ha llegado a su fecha y, si es así, lanza una publicación.
  */
 import { chat, limpiarCuotas } from "./chat";
 import { CSS, JS } from "./cliente";
 import { limpiarContactos, registrarContacto, resumenContactos } from "./contactos";
-import { lanzarPublicacion, publicarProgramadas } from "./publicar";
+import { anotarLectura, lanzarPublicacion, revisarPublicacion } from "./publicar";
 import { html, imagen, json, recurso, redirigir } from "./respuestas";
 import {
   DIAS_INVITACION,
@@ -299,7 +299,11 @@ async function apiCampanas(env: Env): Promise<Response> {
         : null,
   }));
 
-  return new Response(JSON.stringify({ generado: ahora(), campanas }), {
+  const generado = ahora();
+  // Con esto el panel sabe qué cambios ha recogido ya una compilación (worker/publicar.ts).
+  await anotarLectura(env, generado);
+
+  return new Response(JSON.stringify({ generado, campanas }), {
     headers: {
       "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "no-store",
@@ -563,7 +567,12 @@ export default {
     }
   },
 
-  async scheduled(_evento: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
-    ctx.waitUntil(Promise.all([publicarProgramadas(env), limpiarCaducados(env), limpiarCuotas(env), limpiarContactos(env)]));
+  async scheduled(evento: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+    // Cada 5 minutos: publicar lo que haya quedado pendiente. Una vez por hora, además, limpieza.
+    const tareas: Promise<void>[] = [revisarPublicacion(env)];
+    if (new Date(evento.scheduledTime).getUTCMinutes() < 5) {
+      tareas.push(limpiarCaducados(env), limpiarCuotas(env), limpiarContactos(env));
+    }
+    ctx.waitUntil(Promise.all(tareas));
   },
 } satisfies ExportedHandler<Env>;

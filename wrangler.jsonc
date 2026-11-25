@@ -28,8 +28,9 @@
     }
   ],
 
-  // Cada hora: publica las campañas programadas que han llegado a su fecha.
-  "triggers": { "crons": ["5 * * * *"] },
+  // Cada 5 minutos: publica lo que haya quedado pendiente (cambios que ninguna
+  // compilación recogió y campañas programadas que llegan a su fecha).
+  "triggers": { "crons": ["*/5 * * * *"] },
 
   // Asistente de la web (worker/chat.ts). El modelo se puede cambiar aquí sin tocar código:
   // "claude-opus-5-5" (el más capaz), "claude-sonnet-5-5" o "claude-haiku-5-5" (el más barato).

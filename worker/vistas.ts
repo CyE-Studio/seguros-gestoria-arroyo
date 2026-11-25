@@ -132,13 +132,13 @@ const nombreCategoria = (valor: string): string =>
   CATEGORIAS.find((c) => c.valor === valor)?.nombre ?? valor;
 
 const AVISOS: Record<string, { clase: string; texto: string }> = {
-  publicada: { clase: "ok", texto: "Campaña guardada. La web se está actualizando: tarda un par de minutos." },
+  publicada: { clase: "ok", texto: "Campaña guardada. La web se está actualizando: suele tardar dos o tres minutos, y hasta diez si se publican varias seguidas." },
   programada: {
     clase: "ok",
-    texto: "Campaña programada. Aparecerá en la web sola cuando llegue la fecha (puede tardar hasta una hora).",
+    texto: "Campaña programada. Aparecerá en la web sola cuando llegue la fecha, con unos minutos de margen.",
   },
   borrador: { clase: "ok", texto: "Borrador guardado. No se verá en la web hasta que lo publiques." },
-  eliminada: { clase: "ok", texto: "Campaña eliminada. Si estaba publicada, desaparece de la web en un par de minutos." },
+  eliminada: { clase: "ok", texto: "Campaña eliminada. Si estaba publicada, desaparece de la web en unos minutos." },
   "sin-publicar": {
     clase: "error",
     texto: "Los cambios están guardados, pero no se ha podido lanzar la publicación en la web. Avisa a C&E Studio.",
