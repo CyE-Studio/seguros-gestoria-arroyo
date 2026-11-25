@@ -9,6 +9,7 @@ import {
 } from "@/lib/constants";
 import { FAQ_GESTORIA, FAQ_HOME, FAQ_SEGUROS } from "@/lib/faqs";
 import { formatearFecha } from "@/lib/format";
+import { PAGINAS_SERVICIO } from "@/lib/servicios";
 import { textoPlano } from "@/lib/texto-campana";
 import { esModoDemo, getCampanaPorSlug, getCampanas } from "@/services/campanas";
 
@@ -69,6 +70,11 @@ export async function construirContextoAsistente(): Promise<string> {
     `GESTIONES DE MAPFRE QUE SE HACEN EN LA OFICINA\n${lista(GESTIONES_MAPFRE)}`,
     `SERVICIOS DE GESTORÍA\n${lista(SERVICIOS_GESTORIA)}`,
     `VENTAJAS DE LA OFICINA\n${lista(VENTAJAS)}`,
+
+    `DETALLE DE CADA SERVICIO (qué se hace, qué hay que traer y qué conviene saber)\n${PAGINAS_SERVICIO.map(
+      (p) =>
+        `· ${p.nombre}. ${p.entradilla}\n  Qué hacemos: ${p.queHacemos.map((b) => `${b.titulo}: ${b.texto}`).join(" ")}\n  ${p.queTraer.titulo}: ${p.queTraer.elementos.join(" ")}${p.queTraer.nota ? ` ${p.queTraer.nota}` : ""}\n  Conviene saber: ${p.aTenerEnCuenta.join(" ")}`,
+    ).join("\n\n")}`,
 
     `PREGUNTAS FRECUENTES\n${preguntas}`,
     `RESPUESTAS HABITUALES POR TEMA\n${temas}`,

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
-import { urlCanonica } from "@/lib/seo";
+import { IMAGEN_COMPARTIR, urlCanonica } from "@/lib/seo";
 
 import { ComoTrabajamos } from "@/components/home/ComoTrabajamos";
 import { CtaFinal } from "@/components/home/CtaFinal";
@@ -16,13 +17,14 @@ import { FAQ_GESTORIA } from "@/lib/faqs";
 import { slugify } from "@/lib/format";
 
 export const metadata: Metadata = {
-  title: `Gestoría administrativa en ${NEGOCIO.direccion.localidad}`,
-  description: `Gestoría en ${NEGOCIO.direccion.localidad} (${NEGOCIO.direccion.provincia}): declaración de la renta, autónomos, nóminas, transferencias de vehículos, herencias y certificados digitales. Trato personal, sin desplazarte a Badajoz o Mérida.`,
+  title: { absolute: `Gestoría en ${NEGOCIO.direccion.localidad} · Renta y autónomos` },
+  description: `Gestoría en ${NEGOCIO.direccion.localidad}: renta, autónomos, nóminas, transferencias de vehículos y herencias. Sin desplazarte a Badajoz ni a Mérida.`,
   alternates: { canonical: urlCanonica("/gestoria") },
   openGraph: {
     title: `Gestoría administrativa en ${NEGOCIO.direccion.localidad}`,
     description:
       "Renta, autónomos, nóminas, vehículos, herencias y certificados digitales. Nos ocupamos del papeleo.",
+    images: IMAGEN_COMPARTIR,
   },
 };
 
@@ -63,12 +65,21 @@ export default function GestoriaPage() {
                 as="li"
                 key={s.titulo}
                 id={slugify(s.titulo)}
-                className="group scroll-mt-28 rounded-2xl border border-slate-200 bg-white p-6 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift"
+                className="group relative scroll-mt-28 rounded-2xl border border-slate-200 bg-white p-6 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-brand-200 hover:shadow-lift"
               >
                 <span className="icono-baldosa inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-700 group-hover:from-brand-700 group-hover:to-brand-900 group-hover:text-white group-hover:shadow-soft">
                   <Icon name={s.icono} className="h-6 w-6" />
                 </span>
-                <h3 className="mt-5 text-lg font-bold">{s.titulo}</h3>
+                <h3 className="mt-5 text-lg font-bold">
+                  {s.enlace ? (
+                    // Enlace "estirado": toda la tarjeta lleva a la página del servicio.
+                    <Link href={s.enlace} className="after:absolute after:inset-0 hover:underline">
+                      {s.titulo}
+                    </Link>
+                  ) : (
+                    s.titulo
+                  )}
+                </h3>
                 <p className="mt-2 text-base leading-relaxed text-slate-600">{s.descripcion}</p>
               </Spotlight>
             ))}

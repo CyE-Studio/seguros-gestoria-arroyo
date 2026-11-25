@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
-import { urlCanonica } from "@/lib/seo";
+import { IMAGEN_COMPARTIR, urlCanonica } from "@/lib/seo";
 
 import { CtaFinal } from "@/components/home/CtaFinal";
 import { GestionesMapfre } from "@/components/home/GestionesMapfre";
@@ -16,13 +17,14 @@ import { FAQ_SEGUROS } from "@/lib/faqs";
 import { slugify } from "@/lib/format";
 
 export const metadata: Metadata = {
-  title: `Seguros MAPFRE en ${NEGOCIO.direccion.localidad} · Oficina ${NEGOCIO.mapfre.codigoOficina}`,
-  description: `Oficina delegada MAPFRE ${NEGOCIO.mapfre.codigoOficina} en ${NEGOCIO.direccion.localidad} (${NEGOCIO.direccion.provincia}). Seguros de coche, moto, hogar, salud, vida y planes de pensiones. Presupuesto en el momento, partes y grúa gestionados en la oficina.`,
+  title: { absolute: `Seguros MAPFRE en ${NEGOCIO.direccion.localidad} · Oficina delegada` },
+  description: `Oficina MAPFRE en ${NEGOCIO.direccion.localidad}: seguros de coche, hogar, salud y vida. Presupuesto en el momento y partes gestionados en la oficina.`,
   alternates: { canonical: urlCanonica("/seguros") },
   openGraph: {
     title: `Seguros MAPFRE en ${NEGOCIO.direccion.localidad}`,
     description:
       "Coche, hogar, salud, vida y jubilación con una persona de referencia en tu pueblo.",
+    images: IMAGEN_COMPARTIR,
   },
 };
 
@@ -67,12 +69,21 @@ export default function SegurosPage() {
                 as="li"
                 key={s.titulo}
                 id={slugify(s.titulo)}
-                className="group scroll-mt-28 rounded-2xl border border-slate-200 bg-white p-6 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-mapfre-200 hover:shadow-lift [--luz-color:rgb(255_0_45/0.12)]"
+                className="group relative scroll-mt-28 rounded-2xl border border-slate-200 bg-white p-6 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-mapfre-200 hover:shadow-lift [--luz-color:rgb(255_0_45/0.12)]"
               >
                 <span className="icono-baldosa inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-mapfre-50 to-mapfre-100 text-mapfre-600 group-hover:from-mapfre-500 group-hover:to-mapfre-700 group-hover:text-white group-hover:shadow-soft">
                   <Icon name={s.icono} className="h-6 w-6" />
                 </span>
-                <h3 className="mt-5 text-lg font-bold">{s.titulo}</h3>
+                <h3 className="mt-5 text-lg font-bold">
+                  {s.enlace ? (
+                    // Enlace "estirado": toda la tarjeta lleva a la página del servicio.
+                    <Link href={s.enlace} className="after:absolute after:inset-0 hover:underline">
+                      {s.titulo}
+                    </Link>
+                  ) : (
+                    s.titulo
+                  )}
+                </h3>
                 <p className="mt-2 text-base leading-relaxed text-slate-600">{s.descripcion}</p>
               </Spotlight>
             ))}

@@ -22,10 +22,11 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_ORIGIN),
   title: {
-    default: `Seguros MAPFRE y Gestoría en ${NEGOCIO.direccion.localidad} · ${NEGOCIO.nombre}`,
+    // Portada: sin el nombre comercial detrás, para que quepa entero en Google.
+    default: `Seguros MAPFRE y gestoría en ${NEGOCIO.direccion.localidad} (Badajoz)`,
     template: `%s · ${NEGOCIO.nombre}`,
   },
-  description: NEGOCIO.descripcion,
+  description: `Oficina MAPFRE y gestoría en ${NEGOCIO.direccion.localidad}: seguros de coche, hogar y salud, renta, autónomos y vehículos. Trato personal, sin colas.`,
   keywords: [
     "gestoría Arroyo de San Serván",
     "seguros MAPFRE Arroyo de San Serván",

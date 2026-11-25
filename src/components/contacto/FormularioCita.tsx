@@ -12,10 +12,15 @@ const WA_BASE = NEGOCIO.whatsapp.href.split("?")[0];
  * datos y lo abre en una pestaña nueva. Cero mantenimiento y el cliente lo
  * recibe donde ya atiende a la gente.
  */
-export function FormularioCita() {
+interface FormularioCitaProps {
+  /** Motivo que aparece elegido; en una página de servicio, el de ese servicio. */
+  motivoInicial?: (typeof MOTIVOS_CITA)[number];
+}
+
+export function FormularioCita({ motivoInicial = MOTIVOS_CITA[0] }: FormularioCitaProps) {
   const [nombre, setNombre] = useState("");
   const [telefono, setTelefono] = useState("");
-  const [motivo, setMotivo] = useState<string>(MOTIVOS_CITA[0]);
+  const [motivo, setMotivo] = useState<string>(motivoInicial);
   const [mensaje, setMensaje] = useState("");
   const [enviado, setEnviado] = useState(false);
 

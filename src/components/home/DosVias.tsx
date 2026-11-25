@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
@@ -59,7 +61,13 @@ export function DosVias() {
                   <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-700">
                     <Icon name="check" className="h-3 w-3" strokeWidth={3} />
                   </span>
-                  {s.titulo}
+                  {s.enlace ? (
+                    <Link href={s.enlace} className="hover:text-brand-700 hover:underline">
+                      {s.titulo}
+                    </Link>
+                  ) : (
+                    s.titulo
+                  )}
                 </li>
               ))}
             </ul>
@@ -110,7 +118,13 @@ export function DosVias() {
                   <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-mapfre-50 text-mapfre-600">
                     <Icon name="check" className="h-3 w-3" strokeWidth={3} />
                   </span>
-                  {s.titulo}
+                  {s.enlace ? (
+                    <Link href={s.enlace} className="hover:text-brand-700 hover:underline">
+                      {s.titulo}
+                    </Link>
+                  ) : (
+                    s.titulo
+                  )}
                 </li>
               ))}
             </ul>

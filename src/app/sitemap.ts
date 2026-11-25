@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { SITE_URL } from "@/lib/constants";
+import { PAGINAS_SERVICIO, rutaServicio } from "@/lib/servicios";
 import { getCampanas } from "@/services/campanas";
 
 export const dynamic = "force-static";
@@ -23,5 +24,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...estaticas, ...dinamicas];
+  const servicios: MetadataRoute.Sitemap = PAGINAS_SERVICIO.map((p) => ({
+    url: `${SITE_URL}${rutaServicio(p)}`,
+    changeFrequency: "monthly",
+    priority: 0.8,
+  }));
+
+  return [...estaticas, ...servicios, ...dinamicas];
 }

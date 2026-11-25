@@ -11,7 +11,7 @@ import { NEGOCIO } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Contacto y horario",
-  description: `Teléfono, WhatsApp, dirección y horario de ${NEGOCIO.nombre}: ${NEGOCIO.direccion.calle}, ${NEGOCIO.direccion.localidad} (${NEGOCIO.direccion.provincia}). Oficina MAPFRE ${NEGOCIO.mapfre.codigoOficina} y gestoría.`,
+  description: `Teléfono, WhatsApp, dirección y horario de la oficina MAPFRE y gestoría de ${NEGOCIO.direccion.localidad}. De lunes a viernes de 9:00 a 14:00.`,
   alternates: { canonical: urlCanonica("/contacto") },
 };
 

@@ -92,39 +92,47 @@ export interface Servicio {
   titulo: string;
   descripcion: string;
   icono: IconName;
+  /** Página propia del servicio (src/lib/servicios.ts), si la tiene. */
+  enlace?: string;
 }
 
 export const SERVICIOS_GESTORIA: readonly Servicio[] = [
   {
     titulo: "Renta y fiscalidad",
+    enlace: "/gestoria/declaracion-renta",
     descripcion:
       "Declaración de la renta, IVA, modelos trimestrales y respuesta a requerimientos de Hacienda.",
     icono: "calculator",
   },
   {
     titulo: "Autónomos y empresas",
+    enlace: "/gestoria/autonomos",
     descripcion:
       "Alta en Hacienda y Seguridad Social, contabilidad y obligaciones periódicas de tu negocio.",
     icono: "briefcase",
   },
   {
     titulo: "Laboral y Seguridad Social",
+    enlace: "/gestoria/nominas-seguridad-social",
     descripcion: "Nóminas, contratos, altas y bajas de trabajadores, prestaciones y pensiones.",
     icono: "users",
   },
   {
     titulo: "Vehículos y tráfico",
+    enlace: "/gestoria/transferencia-vehiculos",
     descripcion:
       "Transferencias, matriculaciones, bajas e informes de la DGT sin desplazarte a Badajoz.",
     icono: "car",
   },
   {
     titulo: "Herencias y patrimonio",
+    enlace: "/gestoria/herencias-donaciones",
     descripcion: "Herencias, donaciones, plusvalías y escrituras, con asesoramiento previo.",
     icono: "landmark",
   },
   {
     titulo: "Certificados y trámites online",
+    enlace: "/gestoria/certificado-digital",
     descripcion:
       "Certificado digital, Cl@ve, cita previa y gestiones con cualquier administración.",
     icono: "globe",
@@ -135,33 +143,39 @@ export const SERVICIOS_GESTORIA: readonly Servicio[] = [
 export const SERVICIOS_SEGUROS: readonly Servicio[] = [
   {
     titulo: "Coche y moto",
+    enlace: "/seguros/coche-moto",
     descripcion:
       "Terceros, terceros ampliado o todo riesgo, con asistencia en carretera y grúa.",
     icono: "car",
   },
   {
     titulo: "Hogar",
+    enlace: "/seguros/hogar",
     descripcion: "Vivienda habitual, segunda residencia, pisos en alquiler y caravanas.",
     icono: "home",
   },
   {
     titulo: "Salud",
+    enlace: "/seguros/salud",
     descripcion:
       "MAPFRE Salud: amplio cuadro médico y gestión de citas desde la propia oficina.",
     icono: "heart-pulse",
   },
   {
     titulo: "Vida y protección familiar",
+    enlace: "/seguros/vida-ahorro-jubilacion",
     descripcion: "Seguros de vida para que los tuyos estén cubiertos pase lo que pase.",
     icono: "shield-check",
   },
   {
     titulo: "Jubilación y ahorro",
+    enlace: "/seguros/vida-ahorro-jubilacion",
     descripcion: "Planes de pensiones y productos de ahorro para preparar el futuro.",
     icono: "piggy-bank",
   },
   {
     titulo: "Asesoramiento financiero",
+    enlace: "/seguros/vida-ahorro-jubilacion",
     descripcion: "Asesor técnico financiero acreditado para orientarte sin compromiso.",
     icono: "user-check",
   },

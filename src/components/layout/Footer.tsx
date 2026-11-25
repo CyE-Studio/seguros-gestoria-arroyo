@@ -53,7 +53,7 @@ export function Footer() {
             {ENLACES_GESTORIA.map((s) => (
               <li key={s.titulo}>
                 <Link
-                  href={`/gestoria#${slugify(s.titulo)}`}
+                  href={s.enlace ?? `/gestoria#${slugify(s.titulo)}`}
                   className="enlace-sub inline-block text-sm text-brand-200 hover:translate-x-0.5 hover:text-white"
                 >
                   {s.titulo}
@@ -69,7 +69,7 @@ export function Footer() {
             {ENLACES_SEGUROS.map((s) => (
               <li key={s.titulo}>
                 <Link
-                  href={`/seguros#${slugify(s.titulo)}`}
+                  href={s.enlace ?? `/seguros#${slugify(s.titulo)}`}
                   className="enlace-sub inline-block text-sm text-brand-200 hover:translate-x-0.5 hover:text-white"
                 >
                   {s.titulo}

@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import type { MOTIVOS_CITA } from "@/lib/constants";
 
 const VENTAJAS_CITA = [
   { icono: "clock", texto: "Te atendemos a tu hora, sin esperas en la oficina." },
@@ -10,8 +11,18 @@ const VENTAJAS_CITA = [
   { icono: "users", texto: "Siempre te atiende la misma persona, que conoce tu caso." },
 ] as const;
 
+interface PideCitaProps {
+  titulo?: string;
+  descripcion?: string;
+  motivoInicial?: (typeof MOTIVOS_CITA)[number];
+}
+
 /** Sección "Pide cita" con formulario que envía por WhatsApp. */
-export function PideCita() {
+export function PideCita({
+  titulo = "Reserva tu hueco en un minuto",
+  descripcion = "Rellena el formulario y te confirmamos la cita por WhatsApp. Para consultas rápidas no hace falta: ven directamente.",
+  motivoInicial,
+}: PideCitaProps = {}) {
   return (
     <section id="cita" aria-labelledby="cita-titulo" className="scroll-mt-24 bg-white py-20 sm:py-28">
       <Container className="grid items-start gap-12 lg:grid-cols-12">
@@ -20,8 +31,8 @@ export function PideCita() {
             id="cita-titulo"
             alineacion="left"
             sobretitulo="Pide cita"
-            titulo="Reserva tu hueco en un minuto"
-            descripcion="Rellena el formulario y te confirmamos la cita por WhatsApp. Para consultas rápidas no hace falta: ven directamente."
+            titulo={titulo}
+            descripcion={descripcion}
           />
           <ul className="mt-8 space-y-4">
             {VENTAJAS_CITA.map((v) => (
@@ -35,7 +46,7 @@ export function PideCita() {
           </ul>
         </Reveal>
         <Reveal retardo={120} className="lg:col-span-7">
-          <FormularioCita />
+          <FormularioCita motivoInicial={motivoInicial} />
         </Reveal>
       </Container>
     </section>
