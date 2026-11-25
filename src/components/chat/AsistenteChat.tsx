@@ -243,6 +243,7 @@ export function AsistenteChat() {
         role="dialog"
         aria-label="Asistente virtual"
         aria-hidden={!abierto}
+        inert={!abierto}
         className={`fixed bottom-[10.5rem] right-4 z-50 flex w-[calc(100vw-2rem)] max-w-[390px] flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lift transition-[opacity,transform] duration-300 lg:bottom-24 lg:right-6 ${
           abierto
             ? "pointer-events-auto translate-y-0 opacity-100"
@@ -368,7 +369,7 @@ export function AsistenteChat() {
               <Icon name="send" className="h-5 w-5" />
             </button>
           </div>
-          <p className="mt-2 text-center text-[11px] text-slate-400">
+          <p className="mt-2 text-center text-[11px] text-slate-500">
             Asistente con inteligencia artificial: puede equivocarse. No escribas datos
             personales. Para hablar con una persona:{" "}
             <a href={NEGOCIO.whatsapp.href} target="_blank" rel="noopener noreferrer" className="font-semibold text-slate-600">

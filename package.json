@@ -12,8 +12,9 @@
     "panel:dev": "wrangler d1 migrations apply DB --local && wrangler dev",
     "panel:invitar": "node scripts/invitar.mjs",
     "cf:build": "node scripts/comprobar-produccion.mjs && node scripts/traer-campanas.mjs && next build",
-    "cf:publicar": "wrangler d1 migrations apply DB --remote && wrangler deploy",
-    "cf:deploy:inicial": "node scripts/comprobar-produccion.mjs && node scripts/traer-campanas.mjs --vacio && next build && npm run cf:publicar"
+    "cf:publicar": "wrangler d1 migrations apply DB --remote && wrangler deploy && node scripts/indexnow.mjs",
+    "cf:deploy:inicial": "node scripts/comprobar-produccion.mjs && node scripts/traer-campanas.mjs --vacio && next build && npm run cf:publicar",
+    "cf:www": "wrangler deploy -c redireccion-www/wrangler.jsonc"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.14.0",

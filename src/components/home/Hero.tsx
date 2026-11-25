@@ -74,13 +74,13 @@ export function Hero() {
               </div>
               <EstadoApertura className="mt-3" />
 
-              <dl className="mt-7 divide-y divide-slate-100">
+              <div className="mt-7 divide-y divide-slate-100">
                 <div className="flex gap-4 pb-5">
-                  <dt className="sr-only">Dirección</dt>
+                  <span className="sr-only">Dirección</span>
                   <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
                     <Icon name="map-pin" />
                   </span>
-                  <dd>
+                  <div>
                     <p className="font-semibold text-slate-900">{direccion.calle}</p>
                     <p className="text-sm text-slate-500">
                       {direccion.codigoPostal} {direccion.localidad}
@@ -94,15 +94,15 @@ export function Hero() {
                       Cómo llegar
                       <Icon name="arrow-right" className="h-3.5 w-3.5 transition-transform group-hover/l:translate-x-0.5" />
                     </a>
-                  </dd>
+                  </div>
                 </div>
 
                 <div className="flex gap-4 py-5">
-                  <dt className="sr-only">Horario</dt>
+                  <span className="sr-only">Horario</span>
                   <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
                     <Icon name="clock" />
                   </span>
-                  <dd className="flex-1">
+                  <div className="flex-1">
                     <p className="font-semibold text-slate-900">Horario</p>
                     <ul className="mt-1 space-y-0.5 text-sm">
                       {horario.slice(0, 3).map((h) => (
@@ -119,15 +119,15 @@ export function Hero() {
                       Más teléfonos y cómo llegar
                       <Icon name="arrow-right" className="h-3.5 w-3.5 transition-transform group-hover/l:translate-x-0.5" />
                     </Link>
-                  </dd>
+                  </div>
                 </div>
 
                 <div className="flex gap-4 pt-5">
-                  <dt className="sr-only">Teléfono</dt>
+                  <span className="sr-only">Teléfono</span>
                   <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
                     <Icon name="phone" />
                   </span>
-                  <dd>
+                  <div>
                     <a
                       href={telefono.href}
                       className="font-display text-2xl font-bold tracking-tight text-slate-900 transition hover:text-brand-700"
@@ -135,11 +135,11 @@ export function Hero() {
                       {telefono.visible}
                     </a>
                     <p className="text-sm text-slate-500">También por WhatsApp</p>
-                  </dd>
+                  </div>
                 </div>
-              </dl>
+              </div>
 
-              <p className="mt-6 text-xs text-slate-400">Delegado: {mapfre.delegado}</p>
+              <p className="mt-6 text-xs text-slate-500">Delegado: {mapfre.delegado}</p>
             </div>
           </Parallax>
         </div>

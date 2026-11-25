@@ -57,7 +57,7 @@ export function FormularioCita({ motivoInicial = MOTIVOS_CITA[0] }: FormularioCi
           />
         </label>
         <label className="block text-sm font-semibold text-slate-700">
-          Teléfono <span className="font-normal text-slate-400">(opcional)</span>
+          Teléfono <span className="font-normal text-slate-500">(opcional)</span>
           <input
             type="tel"
             name="telefono"
@@ -87,7 +87,7 @@ export function FormularioCita({ motivoInicial = MOTIVOS_CITA[0] }: FormularioCi
       </label>
 
       <label className="mt-5 block text-sm font-semibold text-slate-700">
-        Cuéntanos un poco más <span className="font-normal text-slate-400">(opcional)</span>
+        Cuéntanos un poco más <span className="font-normal text-slate-500">(opcional)</span>
         <textarea
           name="mensaje"
           rows={4}

@@ -17,7 +17,7 @@ function Horario({
 }) {
   return (
     <div>
-      <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">{titulo}</p>
+      <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{titulo}</p>
       <dl className="mt-2 space-y-1">
         {filas.map((h) => (
           <div key={h.dias} className="flex justify-between gap-4 text-sm">
@@ -100,10 +100,10 @@ export function Contacto({ compacto = false }: ContactoProps) {
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
               {FOTOS.fachada && (
                 <Image
-                  src={rutaPublica(FOTOS.fachada)}
+                  src={rutaPublica(FOTOS.fachada.replace(/\.jpg$/, "-800.jpg"))}
                   alt={`Fachada de la oficina MAPFRE y gestoría en la ${direccion.calle}, ${direccion.localidad}`}
-                  width={1360}
-                  height={817}
+                  width={800}
+                  height={481}
                   sizes="(min-width: 1024px) 40vw, 100vw"
                   className="-mx-6 -mt-6 mb-5 block h-44 w-[calc(100%+3rem)] max-w-none object-cover object-top"
                 />
