@@ -78,6 +78,10 @@ export default function PrivacidadPage() {
         interactivo&rdquo;; a partir de ese momento se aplican las condiciones de Google. Las
         fuentes tipográficas se sirven desde nuestro propio dominio, sin conexión a terceros.
       </p>
+      <p>
+        Para saber cuántas visitas recibe la web usamos Cloudflare Web Analytics, que elabora
+        estadísticas agregadas sin utilizar cookies ni identificar a los visitantes.
+      </p>
 
       <h2>8. Asistente virtual</h2>
       <p>

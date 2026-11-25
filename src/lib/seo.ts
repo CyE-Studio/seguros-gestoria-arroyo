@@ -1,4 +1,4 @@
-import { NEGOCIO, SITE_URL, rutaPublica } from "./constants";
+import { FOTOS, NEGOCIO, SITE_URL, rutaPublica } from "./constants";
 import type { Pregunta } from "./faqs";
 import { PAGINAS_SERVICIO, type PaginaServicio, rutaServicio } from "./servicios";
 
@@ -31,7 +31,10 @@ export function negocioJsonLd() {
     url: SITE_URL,
     telephone: NEGOCIO.telefono.e164,
     email: NEGOCIO.email,
-    image: `${SITE_URL}/opengraph-image.png`,
+    image: [
+      ...(FOTOS.fachada ? [`${SITE_URL}${FOTOS.fachada}`] : []),
+      `${SITE_URL}/opengraph-image.png`,
+    ],
     priceRange: "€€",
     address: {
       "@type": "PostalAddress",

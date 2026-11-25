@@ -252,7 +252,7 @@ export const HORARIO_SEMANAL: Record<number, readonly Tramo[]> = {
  * de marca. Ver PLAN-DEMO.md.
  */
 export const FOTOS = {
-  fachada: null as string | null,
+  fachada: "/fotos/fachada.jpg" as string | null,
   interior: null as string | null,
   equipo: null as string | null,
 };

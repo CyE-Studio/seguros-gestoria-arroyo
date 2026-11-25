@@ -37,16 +37,15 @@
   "vars": {
     "MODELO_CHAT": "claude-opus-5-5",
     "LIMITE_CHAT_DIARIO": "300"
-  }
+  },
 
   // Secretos del Worker (DESPLIEGUE.md); se ponen con `npx wrangler secret put <NOMBRE>`:
   //   DEPLOY_HOOK_URL     dirección del deploy hook que compila y publica la web
   //   TOKEN_LECTURA       lo presenta la compilación para leer las campañas
   //   ANTHROPIC_API_KEY   clave de la API de Anthropic para el asistente de la web
 
-  // Dominio propio: descomentar cuando el dominio esté en Cloudflare. Añadir entonces
-  // también  "workers_dev": false  para que el panel solo exista en el dominio.
-  // ,"routes": [
-  //   { "pattern": "segurosgestoriaarroyo.com", "custom_domain": true }
-  // ]
+  // Dominio definitivo. `workers_dev: false` apaga la dirección de pruebas
+  // (*.workers.dev): la web y el panel solo existen en el dominio.
+  "workers_dev": false,
+  "routes": [{ "pattern": "segurosgestoriaarroyo.com", "custom_domain": true }]
 }

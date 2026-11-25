@@ -29,17 +29,20 @@ Cada publicación consume unos 2–3 minutos: caben alrededor de mil al mes.
 
 - [x] Web estática y panel hechos y probados en local.
 - [x] Base de datos D1 creada (su id está en `wrangler.jsonc`).
-- [x] Primer despliegue (paso 1), hecho el 25/11/2026 en
-      <https://seguros-gestoria-arroyo.enriquemadruga57.workers.dev> (dirección de pruebas, sin indexar).
+- [x] Primer despliegue (paso 1), hecho el 25/11/2026.
 - [x] Primera persona con acceso (paso 2): invitación de administrador creada.
 - [x] Secreto `TOKEN_LECTURA` puesto en el Worker. Su valor está en `.env.despliegue.local`
       (fuera de git) para copiarlo como secreto de compilación en el paso 3.5.
 - [ ] Compilación en Cloudflare conectada al repositorio (paso 3).
 - [ ] Publicación automática desde el panel (paso 4).
-- [ ] Clave de Anthropic para el asistente y tope de gasto (sección «Asistente con IA»).
-- [ ] Dominio `segurosgestoriaarroyo.com` conectado (paso 5). Ya está comprado, en Cloudflare.
+- [x] Clave de Anthropic puesta y asistente probado en real. Falta el tope de gasto mensual en
+      la consola de Anthropic (sección «Asistente con IA»).
+- [x] Publicada en <https://segurosgestoriaarroyo.com> el 25/11/2026, indexable. La dirección
+      de pruebas `workers.dev` está apagada. Faltan el redireccionamiento de `www` y forzar
+      HTTPS (paso 5).
 - [x] Datos legales, email y horario del cliente en `src/lib/constants.ts`.
-- [ ] Fotos de la oficina y reseñas reales (pendientes; ver `npm run comprobar`).
+- [x] Foto de la fachada (`public/fotos/fachada.jpg`). No hay más fotos ni reseñas con texto.
+- [ ] Search Console y estadísticas de visitas (paso 7).
 - [ ] Invitar al cliente (paso 6) y alta en Google (paso 7).
 - [ ] Ajustes de seguridad en Cloudflare (sección «Seguridad»).
 
@@ -179,23 +182,24 @@ de 12 KB y con forma válida; no guarda ni registra las conversaciones; el model
 sobre la oficina y deriva a WhatsApp o teléfono lo que no sabe; la respuesta se muestra como
 texto plano. La política de privacidad ya recoge que los mensajes se envían a Anthropic.
 
-Pendiente de probar con una clave real: en local se han probado todas las protecciones y que
-la petición llega a Anthropic, pero no una respuesta de verdad. Tras poner la clave, conviene
-hacerle una docena de preguntas (incluidas algunas fuera de tema) antes de darlo por bueno.
+Probado en real el 25/11/2026 con una docena de preguntas (horario, documentación, precios,
+fuera de tema, intento de manipulación, datos personales): responde bien y los límites por
+conexión cortan como deben.
 
 ## 5. Dominio
 
 El dominio es **segurosgestoriaarroyo.com** y su titular es el cliente (cláusula 10 del contrato).
 Está registrado en Cloudflare, así que los DNS ya están donde deben.
 
-1. Comprobar que el dominio aparece en la misma cuenta de Cloudflare que el Worker.
-2. En `wrangler.jsonc`: descomentar `routes` y añadir `"workers_dev": false` (así el panel
-   deja de estar accesible también en la dirección `workers.dev`). Hacer `push`.
-3. `www` → dominio sin www: en Cloudflare, *Rules → Redirect Rules → Create rule*, plantilla
+1. Hecho: el dominio está conectado en `wrangler.jsonc` (`routes`) y la dirección
+   `workers.dev` está apagada (`"workers_dev": false`).
+2. **Forzar HTTPS** (pendiente): *SSL/TLS → Edge Certificates → Always Use HTTPS*. Ahora
+   mismo `http://` responde sin redirigir.
+3. Pendiente: `www` → dominio sin www: en Cloudflare, *Rules → Redirect Rules → Create rule*, plantilla
    **Redirect from WWW to root**, y un registro DNS `www` (tipo `AAAA`, valor `100::`, con el
    proxy activado) para que la regla pueda actuar.
-4. Cambiar `NEXT_PUBLIC_SITE_URL` y `PANEL_URL` (paso 3.5) al dominio definitivo y lanzar una
-   compilación. Solo entonces la web deja de salir con `noindex`.
+4. Al configurar la compilación (paso 3.5), `NEXT_PUBLIC_SITE_URL` y `PANEL_URL` son ya
+   `https://segurosgestoriaarroyo.com`.
 
 ## 6. Invitar al cliente
 
@@ -209,7 +213,14 @@ con una fecha futura (aparecen solas, con hasta una hora de margen) y retirarlas
 publicación tarda unos dos minutos en verse en la web. El estado de cada compilación se ve en
 Cloudflare, en *Workers & Pages → seguros-gestoria-arroyo → Deployments*.
 
-## 7. Google
+## 7. Google y estadísticas
+
+**Estadísticas de visitas (Cloudflare Web Analytics, gratis y sin cookies).** En el panel de
+Cloudflare: *Analytics & Logs → Web Analytics → Add a site* → `segurosgestoriaarroyo.com`.
+Copiar el **token** del fragmento que muestra (el valor de `"token"`) y ponerlo como variable
+de compilación `NEXT_PUBLIC_CF_ANALYTICS_TOKEN` (paso 3.5). La web ya está preparada: con el
+token carga el contador; sin él, no carga nada. Mide visitas, páginas y procedencia; no mide
+cuántas personas pulsan en WhatsApp o en llamar.
 
 1. **Search Console** (<https://search.google.com/search-console>): añadir la propiedad de tipo
    *Dominio* y verificarla con el registro TXT en el DNS de Cloudflare (o con la variable

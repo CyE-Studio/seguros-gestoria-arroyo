@@ -5,7 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { Parallax } from "@/components/ui/Parallax";
 import { Reveal } from "@/components/ui/Reveal";
-import { FOTOS, NEGOCIO } from "@/lib/constants";
+import { rutaPublica, FOTOS, NEGOCIO } from "@/lib/constants";
 
 const DATOS = [
   { icono: "shield-check", valor: NEGOCIO.mapfre.codigoOficina, etiqueta: "Oficina delegada MAPFRE" },
@@ -28,7 +28,7 @@ export function BandaParallax() {
     >
       {foto && (
         <Parallax velocidad={0.4} className="absolute -inset-y-40 inset-x-0 -z-10">
-          <Image src={foto} alt="" fill sizes="100vw" className="object-cover opacity-30" />
+          <Image src={rutaPublica(foto)} alt="" fill sizes="100vw" className="object-cover opacity-30" />
           <div aria-hidden="true" className="absolute inset-0 bg-brand-950/60" />
         </Parallax>
       )}

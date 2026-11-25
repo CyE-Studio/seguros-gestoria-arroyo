@@ -3,13 +3,14 @@
 #
 # Content-Security-Policy: la web solo carga recursos propios. La única excepción
 # es el mapa de Google de la página de contacto (frame-src), que además no se
-# carga hasta que el visitante lo pide. 'unsafe-inline' en script-src y style-src
+# carga hasta que el visitante lo pide, y el contador de visitas de Cloudflare
+# (cloudflareinsights.com), que no usa cookies. 'unsafe-inline' en script-src y style-src
 # es necesario porque Next.js incrusta en cada página pequeños bloques de datos y
 # estilos; aun así, la política impide cargar código de otros dominios, enviar
 # formularios o datos fuera, e incrustar la web en otra página.
 
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src https://www.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://cloudflareinsights.com; frame-src https://www.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: SAMEORIGIN

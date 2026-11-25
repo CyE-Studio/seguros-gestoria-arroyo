@@ -1,10 +1,12 @@
+import Image from "next/image";
+
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { EstadoApertura } from "@/components/ui/EstadoApertura";
 import { Icon, WhatsAppIcon } from "@/components/ui/Icon";
 import { MapaConsentido } from "@/components/ui/MapaConsentido";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { NEGOCIO } from "@/lib/constants";
+import { FOTOS, NEGOCIO, rutaPublica } from "@/lib/constants";
 
 function Horario({
   titulo,
@@ -95,7 +97,17 @@ export function Contacto({ compacto = false }: ContactoProps) {
               </Button>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
+              {FOTOS.fachada && (
+                <Image
+                  src={rutaPublica(FOTOS.fachada)}
+                  alt={`Fachada de la oficina MAPFRE y gestoría en la ${direccion.calle}, ${direccion.localidad}`}
+                  width={1360}
+                  height={817}
+                  sizes="(min-width: 1024px) 40vw, 100vw"
+                  className="-mx-6 -mt-6 mb-5 block h-44 w-[calc(100%+3rem)] max-w-none object-cover object-top"
+                />
+              )}
               <div className="flex items-center gap-3">
                 <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
                   <Icon name="map-pin" />
