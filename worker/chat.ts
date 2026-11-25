@@ -1,6 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 
-import { sha256 } from "./seguridad";
+import { mismoOrigen, sha256 } from "./seguridad";
 import type { Env } from "./tipos";
 
 /**
@@ -239,8 +239,8 @@ async function preguntarAClaude(env: Env, sistema: string, turnos: Turno[]): Pro
 export async function chat(req: Request, env: Env): Promise<Response> {
   if (req.method !== "POST") return responder({ error: "metodo" }, 405);
 
-  // Solo desde la propia web (los navegadores envían Origin en los POST).
-  if (req.headers.get("Origin") !== new URL(req.url).origin) return responder({ error: "origen" }, 403);
+  // Solo desde la propia web.
+  if (!mismoOrigen(req)) return responder({ error: "origen" }, 403);
   if (!(req.headers.get("Content-Type") ?? "").toLowerCase().startsWith("application/json")) {
     return responder({ error: "formato" }, 415);
   }

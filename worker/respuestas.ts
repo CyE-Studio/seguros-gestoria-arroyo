@@ -8,8 +8,11 @@ const SEGURIDAD: Record<string, string> = {
   "Cross-Origin-Opener-Policy": "same-origin",
   "Cross-Origin-Resource-Policy": "same-origin",
   "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
-  // Los enlaces de invitación llevan el token en la URL: que no viaje a otras webs.
-  "Referrer-Policy": "no-referrer",
+  // Los enlaces de invitación llevan el token en la URL: la dirección de procedencia solo se
+  // envía a la propia web, nunca a otras. No puede ser "no-referrer": con esa política los
+  // navegadores marcan como desconocido (Origin: null) el origen de los formularios, y la
+  // comprobación de `mismoOrigen` los rechazaría todos.
+  "Referrer-Policy": "same-origin",
   "X-Robots-Tag": "noindex, nofollow",
   "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
   "Cache-Control": "no-store",

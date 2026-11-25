@@ -197,6 +197,7 @@ export const JS = String.raw`
           var quitar = form.elements.quitar_imagen;
           if (quitar) quitar.checked = false;
           URL.revokeObjectURL(url);
+          pendiente = null;
           resolver();
         });
       };
@@ -204,23 +205,26 @@ export const JS = String.raw`
         avisoImagen.textContent = "No se ha podido leer esa imagen. Prueba con una foto en JPG o PNG.";
         avisoImagen.hidden = false;
         archivo.value = "";
+        pendiente = null;
         resolver();
       };
     });
     img.src = url;
   });
 
-  var enviando = false;
   form.addEventListener("submit", function (e) {
     var d = new Date(fechaLocal.value);
     fechaIso.value = isNaN(d) ? "" : d.toISOString();
-    // Si la imagen aún se está reduciendo, se espera y se reenvía con el mismo botón.
-    if (pendiente && !enviando) {
+    // Si se pulsa mientras la imagen aún se está reduciendo (son décimas de segundo), se
+    // espera y se vuelve a enviar con el mismo botón. El reenvío va en un temporizador:
+    // hecho dentro del propio evento de envío, el navegador lo ignora.
+    if (pendiente) {
       e.preventDefault();
       var boton = e.submitter;
       pendiente.then(function () {
-        enviando = true;
-        if (boton) form.requestSubmit(boton); else form.requestSubmit();
+        window.setTimeout(function () {
+          if (boton) form.requestSubmit(boton); else form.requestSubmit();
+        }, 0);
       });
     }
   });

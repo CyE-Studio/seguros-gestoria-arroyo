@@ -208,11 +208,17 @@ export async function limpiarCaducados(env: Env): Promise<void> {
 }
 
 /**
- * Los formularios solo se aceptan si vienen de la propia web. Junto con
- * SameSite=Lax en la cookie, evita que otra página envíe acciones en nombre
- * de alguien con la sesión abierta (CSRF).
+ * Las acciones solo se aceptan si las envía una página de la propia web. Junto
+ * con SameSite=Lax en la cookie, evita que otra página actúe en nombre de
+ * alguien con la sesión abierta (CSRF).
+ *
+ * Se mira primero `Sec-Fetch-Site`, que el navegador rellena por su cuenta y
+ * una página no puede falsear: vale "same-origin" cuando la petición sale de
+ * esta misma web. Los navegadores que no lo envían se comprueban por `Origin`.
  */
 export function mismoOrigen(req: Request): boolean {
+  const sitio = req.headers.get("Sec-Fetch-Site");
+  if (sitio !== null) return sitio === "same-origin";
   const origen = req.headers.get("Origin");
   return origen !== null && origen === new URL(req.url).origin;
 }
