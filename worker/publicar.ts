@@ -23,7 +23,9 @@ export async function lanzarPublicacion(env: Env): Promise<ResultadoPublicar> {
   }
 
   try {
-    const respuesta = await fetch(hook, { method: "POST", redirect: "error" });
+    // "manual": una redirección no se sigue (la dirección es un secreto y no debe viajar a
+    // otro sitio); llegaría como 3xx y se trata como fallo. Los Workers no admiten "error".
+    const respuesta = await fetch(hook, { method: "POST", redirect: "manual" });
     const datos = (await respuesta.json().catch(() => null)) as { success?: boolean } | null;
     if (!respuesta.ok || datos?.success !== true) {
       // Sin volcar la respuesta ni la dirección: el registro no debe contener el secreto.
@@ -37,8 +39,9 @@ export async function lanzarPublicacion(env: Env): Promise<ResultadoPublicar> {
       .bind(new Date().toISOString())
       .run();
     return { ok: true };
-  } catch {
-    console.error("[publicar] no se pudo contactar con Cloudflare");
+  } catch (error) {
+    // El tipo de error ayuda a diagnosticar; el mensaje no se registra por si incluyera la dirección.
+    console.error("[publicar] no se pudo contactar con Cloudflare:", error instanceof Error ? error.name : "error");
     return { ok: false, motivo: "no se pudo contactar con Cloudflare" };
   }
 }
