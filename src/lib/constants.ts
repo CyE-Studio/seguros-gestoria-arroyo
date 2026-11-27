@@ -29,9 +29,10 @@ export const NEGOCIO = {
     { visible: "695 93 44 94", href: "tel:+34695934494", e164: "+34695934494" },
     { visible: "605 02 26 05", href: "tel:+34605022605", e164: "+34605022605" },
   ],
+  /** WhatsApp va siempre al móvil 605 02 26 05, no al fijo (indicado por el cliente el 27/11/2026). */
   whatsapp: {
-    visible: "924 34 22 02",
-    href: "https://wa.me/34924342202?text=Hola%2C%20me%20gustar%C3%ADa%20hacer%20una%20consulta",
+    visible: "605 02 26 05",
+    href: "https://wa.me/34605022605?text=Hola%2C%20me%20gustar%C3%ADa%20hacer%20una%20consulta",
   },
   email: "alfonsosuarez71@gmail.com",
   /** Atención al público: el mismo horario todo el año. */
